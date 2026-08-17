@@ -122,7 +122,7 @@ php artisan about
 
 **Commit sugerido:** `chore: Inicializa aplicação Laravel`
 
-### [ ] 1.2 Configurar idioma, fuso e ambiente
+### [x] 1.2 Configurar idioma, fuso e ambiente
 
 **Requisitos:** RF-001, RF-006
 **Dependências:** 1.1
