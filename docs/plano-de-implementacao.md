@@ -413,7 +413,7 @@ Objetivo: disponibilizar leitura, validação e persistência antes de completar
 
 **Commit sugerido:** `feat: Valida dados da inscrição`
 
-### [ ] 3.5 Implementar transação e idempotência
+### [x] 3.5 Implementar transação e idempotência
 
 **Requisitos:** RF-002 a RF-008
 **Dependências:** 3.4
