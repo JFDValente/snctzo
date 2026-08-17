@@ -221,7 +221,7 @@ php artisan migrate
 
 **Commit sugerido:** `feat: Cria estrutura de instituições e cursos`
 
-### [ ] 2.2 Criar migrations de professores e alunos
+### [x] 2.2 Criar migrations de professores e alunos
 
 **Requisitos:** RF-003, RF-004
 **Dependências:** 2.1
