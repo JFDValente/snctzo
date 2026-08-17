@@ -344,7 +344,7 @@ Objetivo: disponibilizar leitura, validação e persistência antes de completar
 
 **Commit sugerido:** `feat: Controla período de inscrições`
 
-### [ ] 3.2 Implementar catálogos do formulário
+### [x] 3.2 Implementar catálogos do formulário
 
 **Requisitos:** RF-002, RF-004
 **Dependências:** 2.5
