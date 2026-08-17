@@ -263,7 +263,7 @@ php artisan migrate
 
 **Commit sugerido:** `feat: Cria estrutura de atividades`
 
-### [ ] 2.4 Implementar models e relacionamentos
+### [x] 2.4 Implementar models e relacionamentos
 
 **Requisitos:** RF-002 a RF-007
 **Dependências:** 2.3
