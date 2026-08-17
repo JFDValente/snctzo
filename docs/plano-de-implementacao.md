@@ -323,7 +323,7 @@ Executar o seed novamente e confirmar que não duplica instituições.
 
 Objetivo: disponibilizar leitura, validação e persistência antes de completar a interface.
 
-### [ ] 3.1 Implementar disponibilidade das inscrições
+### [x] 3.1 Implementar disponibilidade das inscrições
 
 **Requisitos:** RF-001
 **Dependências:** Gate 2
