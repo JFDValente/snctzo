@@ -1,9 +1,240 @@
-@import 'tailwindcss';
+:root {
+    color-scheme: light;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-synthesis: none;
+    --cor-fundo: #f5f7f6;
+    --cor-superficie: #ffffff;
+    --cor-texto: #17211d;
+    --cor-texto-suave: #52615a;
+    --cor-primaria: #176b49;
+    --cor-primaria-escura: #0d4b32;
+    --cor-destaque: #e8b339;
+    --cor-borda: #d9e1dd;
+    --sombra-suave: 0 16px 40px rgb(23 33 29 / 8%);
+    --largura-conteudo: 72rem;
+}
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+html {
+    min-width: 20rem;
+    background: var(--cor-fundo);
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    color: var(--cor-texto);
+    background: var(--cor-fundo);
+    line-height: 1.6;
+}
+
+main {
+    flex: 1;
+}
+
+a {
+    color: inherit;
+}
+
+h1,
+h2,
+p,
+dl,
+dd {
+    margin-top: 0;
+}
+
+h1,
+h2 {
+    line-height: 1.15;
+}
+
+h1 {
+    max-width: 12ch;
+    margin-bottom: 1rem;
+    font-size: clamp(2.5rem, 9vw, 5rem);
+    letter-spacing: -0.05em;
+}
+
+h2 {
+    margin-bottom: 0.5rem;
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+}
+
+.conteiner {
+    width: min(calc(100% - 2rem), var(--largura-conteudo));
+    margin-inline: auto;
+}
+
+.atalho-conteudo {
+    position: fixed;
+    z-index: 10;
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.65rem 1rem;
+    color: var(--cor-superficie);
+    background: var(--cor-primaria-escura);
+    border-radius: 0.4rem;
+    transform: translateY(-150%);
+}
+
+.atalho-conteudo:focus {
+    transform: translateY(0);
+}
+
+:focus-visible {
+    outline: 0.2rem solid var(--cor-destaque);
+    outline-offset: 0.2rem;
+}
+
+.cabecalho-publico {
+    color: var(--cor-superficie);
+    background: var(--cor-primaria-escura);
+}
+
+.cabecalho-publico__conteudo {
+    min-height: 4.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.marca {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    text-decoration: none;
+}
+
+.marca__sigla {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+}
+
+.marca__ano {
+    color: var(--cor-destaque);
+    font-weight: 700;
+}
+
+.apresentacao {
+    position: relative;
+    overflow: hidden;
+    color: var(--cor-superficie);
+    background: linear-gradient(135deg, var(--cor-primaria-escura), var(--cor-primaria));
+}
+
+.apresentacao::after {
+    position: absolute;
+    width: 24rem;
+    height: 24rem;
+    right: -10rem;
+    bottom: -14rem;
+    content: "";
+    background: var(--cor-destaque);
+    border-radius: 50%;
+    opacity: 0.18;
+}
+
+.apresentacao__conteudo {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(3rem, 9vw, 6rem);
+}
+
+.rotulo {
+    margin-bottom: 0.5rem;
+    color: var(--cor-destaque);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.apresentacao__resumo {
+    max-width: 42rem;
+    margin-bottom: 2rem;
+    font-size: clamp(1.05rem, 3vw, 1.3rem);
+}
+
+.dados-evento {
+    max-width: 48rem;
+    margin-bottom: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.dados-evento__item {
+    padding: 1rem 1.25rem;
+    background: rgb(255 255 255 / 10%);
+    border: 1px solid rgb(255 255 255 / 22%);
+    border-radius: 0.75rem;
+}
+
+.dados-evento dt {
+    color: var(--cor-destaque);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.dados-evento dd {
+    margin-bottom: 0;
+    font-weight: 650;
+}
+
+.secao-informativa {
+    padding-block: clamp(2rem, 7vw, 4rem);
+}
+
+.aviso {
+    padding: clamp(1.25rem, 4vw, 2rem);
+    display: flex;
+    gap: 1rem;
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-left: 0.35rem solid var(--cor-primaria);
+    border-radius: 0.75rem;
+    box-shadow: var(--sombra-suave);
+}
+
+.aviso p {
+    margin-bottom: 0;
+    color: var(--cor-texto-suave);
+}
+
+.rodape-publico {
+    padding-block: 1.5rem;
+    color: var(--cor-texto-suave);
+    background: var(--cor-superficie);
+    border-top: 1px solid var(--cor-borda);
+    font-size: 0.9rem;
+}
+
+.rodape-publico p {
+    margin-bottom: 0;
+}
+
+@media (min-width: 42rem) {
+    .conteiner {
+        width: min(calc(100% - 4rem), var(--largura-conteudo));
+    }
+
+    .dados-evento {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
 }

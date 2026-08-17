@@ -154,7 +154,7 @@ php artisan about
 
 **Commit sugerido:** `chore: Configura ambiente da aplicação`
 
-### [ ] 1.3 Preparar frontend sem framework
+### [x] 1.3 Preparar frontend sem framework
 
 **Requisitos:** base visual de RF-002 a RF-008
 **Dependências:** 1.1
