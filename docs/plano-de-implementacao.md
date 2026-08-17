@@ -286,7 +286,7 @@ php artisan migrate
 
 **Commit sugerido:** `feat: Modela domínio de inscrições`
 
-### [ ] 2.5 Criar dados iniciais
+### [x] 2.5 Criar dados iniciais
 
 **Requisitos:** RF-002
 **Dependências:** 2.4
