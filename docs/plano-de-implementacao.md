@@ -365,7 +365,7 @@ Objetivo: disponibilizar leitura, validação e persistência antes de completar
 
 **Commit sugerido:** `feat: Disponibiliza catálogos de inscrição`
 
-### [ ] 3.3 Implementar busca exata de professor
+### [x] 3.3 Implementar busca exata de professor
 
 **Requisitos:** RF-003, RF-004, RF-009
 **Dependências:** 2.4
