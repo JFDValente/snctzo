@@ -388,7 +388,7 @@ Objetivo: disponibilizar leitura, validação e persistência antes de completar
 
 **Commit sugerido:** `feat: Adiciona busca de professor por email`
 
-### [ ] 3.4 Implementar normalização e validação final
+### [x] 3.4 Implementar normalização e validação final
 
 **Requisitos:** RF-002 a RF-007
 **Dependências:** 3.1 a 3.3
