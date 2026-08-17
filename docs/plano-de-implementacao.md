@@ -194,7 +194,7 @@ npm run build
 
 Objetivo: materializar o modelo de dados e suas invariantes antes do formulário.
 
-### [ ] 2.1 Criar migrations de instituições e cursos
+### [x] 2.1 Criar migrations de instituições e cursos
 
 **Requisitos:** RF-002
 **Dependências:** Gate 1
