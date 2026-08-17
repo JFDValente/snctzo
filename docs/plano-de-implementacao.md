@@ -88,7 +88,7 @@ Se o ambiente não cumprir esses requisitos, interromper a implementação e cor
 
 Objetivo: criar uma aplicação Laravel mínima, reproduzível e executável localmente.
 
-### [ ] 1.1 Inicializar a aplicação Laravel
+### [x] 1.1 Inicializar a aplicação Laravel
 
 **Requisitos:** fundação de RF-001 a RF-010
 **Dependências:** Gate 0

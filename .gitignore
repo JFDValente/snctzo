@@ -1,0 +1,15 @@
+.DS_Store
+.idea/
+.vscode/
+
+**/.env
+**/.env.backup
+**/.env.local
+**/.env.production
+**/auth.json
+
+apps/web/node_modules/
+apps/web/public/build/
+apps/web/public/hot
+apps/web/storage/*.key
+apps/web/vendor/
