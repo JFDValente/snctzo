@@ -241,7 +241,7 @@ php artisan migrate
 
 **Commit sugerido:** `feat: Cria estrutura de participantes`
 
-### [ ] 2.3 Criar migrations de atividades e participações
+### [x] 2.3 Criar migrations de atividades e participações
 
 **Requisitos:** RF-005, RF-006, RF-007, RF-010
 **Dependências:** 2.2
