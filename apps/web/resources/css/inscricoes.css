@@ -276,10 +276,6 @@ input[readonly] {
     background: #edf1ef;
 }
 
-html[data-js="ativo"] .etapa:not([data-etapa="1"]) {
-    display: none;
-}
-
 .erro-campo {
     margin: 0.5rem 0 0;
     color: #a31515;
@@ -315,5 +311,15 @@ html[data-js="ativo"] .etapa:not([data-etapa="1"]) {
 
     .formulario__navegacao .botao {
         flex: 1;
+    }
+}
+
+@media (max-width: 28rem) {
+    .progresso__etapa {
+        font-size: 0;
+    }
+
+    .progresso__etapa span {
+        font-size: 0.85rem;
     }
 }

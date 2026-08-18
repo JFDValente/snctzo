@@ -79,7 +79,13 @@ const iniciarInstituicao = async () => {
             campo.value = '';
         });
         camposInstituicao[0].required = true;
-        limparCursos();
+
+        if (nova) {
+            configurarCurso([]);
+        } else {
+            limparCursos();
+        }
+
         emitirAlteracao(formulario, { instituicao: null, cursos: [], alunos: [], nova });
     };
 
