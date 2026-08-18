@@ -713,7 +713,7 @@ Objetivo: colocar uma versão validada no subdomínio de `sicsu.net`.
 
 **Commit sugerido:** somente se houver ajustes de configuração versionável.
 
-### [ ] 7.2 Configurar Hostinger
+### [x] 7.2 Configurar Hostinger
 
 **Dependências:** 7.1
 
