@@ -9,6 +9,8 @@ Route::redirect('/', '/inscricoes')->name('inicio');
 
 Route::view('inscricoes', 'inscricoes.create')->name('inscricoes.create');
 
+Route::view('inscricoes/sucesso', 'inscricoes.sucesso')->name('inscricoes.sucesso');
+
 Route::prefix('inscricoes/catalogo')
     ->name('inscricoes.catalogo.')
     ->group(function (): void {

@@ -43,6 +43,7 @@
 
         <form id="formulario-inscricao" class="formulario" action="{{ route('inscricoes.store') }}" method="post" novalidate>
             @csrf
+            <input name="token_submissao" type="hidden" value="{{ \Illuminate\Support\Str::uuid() }}">
             <input type="text" class="campo-armadilha" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
 
             @include('inscricoes.partials.etapa-1')
@@ -51,6 +52,7 @@
             @include('inscricoes.partials.etapa-4')
             @include('inscricoes.partials.etapa-5')
 
+            <p class="mensagem-formulario" data-formulario-mensagem aria-live="polite"></p>
             <div class="formulario__navegacao">
                 <button class="botao botao--secundario" type="button" data-anterior>Anterior</button>
                 <button class="botao" type="button" data-proxima>Próxima</button>

@@ -278,6 +278,12 @@ html[data-js="ativo"] .etapa:not([data-etapa="1"]) {
     font-weight: 700;
 }
 
+.mensagem-formulario {
+    margin: 1.5rem 0 0;
+    color: #a31515;
+    font-weight: 700;
+}
+
 @media (min-width: 42rem) {
     .campo {
         grid-column: span 6;

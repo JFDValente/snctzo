@@ -543,7 +543,7 @@ Objetivo: implementar a experiência pública completa sobre o backend validado.
 
 **Commit sugerido:** `feat: Controla navegação do formulário`
 
-### [ ] 4.5 Integrar submissão e confirmação
+### [x] 4.5 Integrar submissão e confirmação
 
 **Requisitos:** RF-007, RF-008
 **Dependências:** 4.4, 3.5

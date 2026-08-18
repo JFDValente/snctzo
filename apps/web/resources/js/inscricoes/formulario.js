@@ -30,7 +30,9 @@ const iniciarFormulario = () => {
     const botaoAnterior = formulario.querySelector('[data-anterior]');
     const botaoProxima = formulario.querySelector('[data-proxima]');
     const botaoEnviar = formulario.querySelector('[data-enviar]');
+    const mensagemFormulario = formulario.querySelector('[data-formulario-mensagem]');
     let etapaAtual = 1;
+    let enviando = false;
 
     const limparErros = (etapa) => {
         etapa.querySelectorAll('.erro-campo').forEach((erro) => erro.remove());
@@ -46,6 +48,80 @@ const iniciarFormulario = () => {
         erro.className = 'erro-campo';
         erro.textContent = mensagem;
         destino.appendChild(erro);
+    };
+
+    const campoPorChave = (chave) => {
+        const nome = chave.replace(/\.([^.]*)/g, '[$1]');
+
+        return formulario.querySelector(`[name="${CSS.escape(nome)}"]`);
+    };
+
+    const exibirErrosDoServidor = (erros) => {
+        let primeiroCampo = null;
+
+        Object.entries(erros).forEach(([chave, mensagens]) => {
+            const campo = campoPorChave(chave);
+
+            if (!campo) {
+                mensagemFormulario.textContent = mensagens[0];
+
+                return;
+            }
+
+            adicionarErro(campo, mensagens[0]);
+            primeiroCampo ??= campo;
+        });
+
+        if (primeiroCampo) {
+            const etapa = primeiroCampo.closest('[data-etapa]');
+            etapaAtual = Number(etapa.dataset.etapa);
+            atualizarEtapas();
+            primeiroCampo.focus();
+        }
+    };
+
+    const enviarInscricao = async () => {
+        if (enviando) {
+            return;
+        }
+
+        enviando = true;
+        let inscricaoEnviada = false;
+        botaoEnviar.disabled = true;
+        botaoEnviar.textContent = 'Enviando inscrição…';
+        mensagemFormulario.textContent = '';
+
+        try {
+            const resposta = await fetch(formulario.action, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: new FormData(formulario),
+            });
+            const dados = await resposta.json();
+
+            if (!resposta.ok) {
+                exibirErrosDoServidor(dados.errors ?? {});
+                mensagemFormulario.textContent ||= dados.message ?? 'Não foi possível enviar a inscrição.';
+
+                return;
+            }
+
+            inscricaoEnviada = true;
+            window.location.assign(dados.url_sucesso);
+        } catch {
+            mensagemFormulario.textContent = 'Não foi possível enviar a inscrição. Verifique sua conexão e tente novamente.';
+        } finally {
+            if (inscricaoEnviada) {
+                return;
+            }
+
+            enviando = false;
+            botaoEnviar.disabled = false;
+            botaoEnviar.textContent = 'Enviar inscrição';
+        }
     };
 
     const validarDias = (etapa) => {
@@ -143,7 +219,12 @@ const iniciarFormulario = () => {
 
         if (!validarEtapa(etapaAtual)) {
             evento.preventDefault();
+
+            return;
         }
+
+        evento.preventDefault();
+        enviarInscricao();
     });
 
     atualizarEtapas();
