@@ -237,6 +237,15 @@
     clip-path: inset(50%);
 }
 
+[hidden] {
+    display: none !important;
+}
+
+input[readonly] {
+    color: var(--cor-texto-suave);
+    background: #edf1ef;
+}
+
 html[data-js="ativo"] .etapa:not([data-etapa="1"]),
 html[data-js="ativo"] [data-anterior],
 html[data-js="ativo"] [data-enviar] {

@@ -453,7 +453,7 @@ Objetivo: disponibilizar leitura, validação e persistência antes de completar
 
 Objetivo: implementar a experiência pública completa sobre o backend validado.
 
-### [ ] 4.1 Criar estrutura das cinco etapas
+### [x] 4.1 Criar estrutura das cinco etapas
 
 **Requisitos:** RF-001, RF-002, RF-005, RF-006
 **Dependências:** Gate 3
@@ -475,7 +475,7 @@ Objetivo: implementar a experiência pública completa sobre o backend validado.
 
 **Commit sugerido:** `feat: Cria formulário paginado`
 
-### [ ] 4.2 Implementar instituição, curso e responsável
+### [x] 4.2 Implementar instituição, curso e responsável
 
 **Requisitos:** RF-002, RF-003
 **Dependências:** 4.1, 3.2, 3.3
