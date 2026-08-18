@@ -194,6 +194,27 @@
     margin-top: 0.75rem;
 }
 
+.participante {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    background: #f7faf8;
+    border: 1px solid var(--cor-borda);
+    border-radius: 0.6rem;
+}
+
+.participante__cabecalho {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.participante__cabecalho h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
 .formulario__navegacao {
     margin-top: 2rem;
     padding-top: 1.5rem;

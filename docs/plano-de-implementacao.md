@@ -498,7 +498,7 @@ Objetivo: implementar a experiência pública completa sobre o backend validado.
 
 **Commit sugerido:** `feat: Implementa identificação da atividade`
 
-### [ ] 4.3 Implementar participantes dinâmicos
+### [x] 4.3 Implementar participantes dinâmicos
 
 **Requisitos:** RF-004
 **Dependências:** 4.2

@@ -73,6 +73,16 @@ const iniciarProfessorResponsavel = () => {
             mensagem.textContent = erro.message;
         }
     });
+
+    email.addEventListener('input', () => {
+        if (nome.readOnly) {
+            nome.value = '';
+            nome.readOnly = false;
+        }
+
+        email.setCustomValidity('');
+        mensagem.textContent = '';
+    });
 };
 
 document.addEventListener('DOMContentLoaded', iniciarProfessorResponsavel);
