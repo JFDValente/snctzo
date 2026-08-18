@@ -22,9 +22,9 @@ Route::prefix('inscricoes/catalogo')
     });
 
 Route::get('inscricoes/professores/busca', BuscarProfessorController::class)
-    ->middleware('throttle:30,1')
+    ->middleware('throttle:busca-professores')
     ->name('inscricoes.professores.busca');
 
 Route::post('inscricoes', InscricaoController::class)
-    ->middleware('throttle:'.config('snctzo.inscricoes.limite_por_ip_por_hora').',60')
+    ->middleware('throttle:inscricoes')
     ->name('inscricoes.store');

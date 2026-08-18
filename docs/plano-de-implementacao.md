@@ -577,7 +577,7 @@ Objetivo: implementar a experiência pública completa sobre o backend validado.
 
 Objetivo: preparar o MVP para publicação sem SMTP.
 
-### [ ] 5.1 Aplicar proteções contra abuso
+### [x] 5.1 Aplicar proteções contra abuso
 
 **Requisitos:** RF-009
 **Dependências:** Gate 4

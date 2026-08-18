@@ -76,8 +76,15 @@ class StoreAtividadeRequest extends FormRequest
     {
         return [
             'required' => 'Este campo é obrigatório.',
+            'required_without' => 'Este campo é obrigatório.',
             'accepted' => 'Este aceite é obrigatório.',
+            'array' => 'Informe uma lista válida.',
+            'boolean' => 'Informe uma opção válida.',
             'email' => 'Informe um e-mail válido.',
+            'exists' => 'O cadastro informado não existe.',
+            'in' => 'Informe uma opção válida.',
+            'integer' => 'Informe um número válido.',
+            'min' => 'Informe a quantidade mínima exigida.',
             'url' => 'Informe uma URL válida.',
             'max' => 'O campo ultrapassa o limite permitido.',
             'uuid' => 'O token de submissão é inválido.',
