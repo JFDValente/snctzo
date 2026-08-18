@@ -643,7 +643,7 @@ Se o Gate 5 passar, a aplicação pode ser publicada sem e-mail.
 
 Objetivo: adicionar SMTP sem comprometer o cadastro já estabilizado.
 
-### [ ] 6.1 Criar template da confirmação
+### [x] 6.1 Criar template da confirmação
 
 **Requisitos:** RF-010
 **Dependências:** Gate 5
