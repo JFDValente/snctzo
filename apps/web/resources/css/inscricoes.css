@@ -1,0 +1,269 @@
+.inscricao-apresentacao {
+    padding-block: clamp(2.5rem, 7vw, 5rem);
+    color: var(--cor-superficie);
+    background: linear-gradient(135deg, var(--cor-primaria-escura), var(--cor-primaria));
+}
+
+.inscricao-apresentacao h1 {
+    max-width: 20ch;
+}
+
+.inscricao-apresentacao p {
+    max-width: 52rem;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+}
+
+.inscricao-apresentacao__prazo {
+    margin-top: 1.5rem !important;
+    padding: 1rem 1.25rem;
+    background: rgb(255 255 255 / 12%);
+    border-left: 0.3rem solid var(--cor-destaque);
+}
+
+.inscricao {
+    padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.inscricao__cabecalho,
+.secao-interna__cabecalho {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.inscricao__orientacao,
+.campo__ajuda,
+.mensagem-campo {
+    color: var(--cor-texto-suave);
+    font-size: 0.9rem;
+}
+
+.progresso {
+    margin: 0 0 2rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+    list-style: none;
+}
+
+.progresso__etapa {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    color: var(--cor-texto-suave);
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+.progresso__etapa span {
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    color: var(--cor-primaria-escura);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 50%;
+    font-weight: 800;
+}
+
+.progresso__etapa[aria-current="step"] span,
+.progresso__etapa--concluida span {
+    color: var(--cor-superficie);
+    background: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+.formulario {
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 0.9rem;
+    box-shadow: var(--sombra-suave);
+}
+
+.etapa {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.etapa > legend {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    font-size: clamp(1.35rem, 4vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.texto-formulario,
+.secao-interna {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.texto-formulario h3 {
+    margin-top: 1.5rem;
+}
+
+.texto-formulario ul {
+    padding-left: 1.25rem;
+}
+
+.grupo-campos {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+
+.campo {
+    grid-column: span 12;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+}
+
+.campo label,
+.campo legend {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.campo input:not([type="checkbox"]):not([type="radio"]),
+.campo select,
+.campo textarea {
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    color: var(--cor-texto);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 0.45rem;
+    font: inherit;
+}
+
+.campo textarea {
+    resize: vertical;
+}
+
+.campo input:disabled,
+.campo select:disabled,
+.campo textarea:disabled {
+    color: var(--cor-texto-suave);
+    background: #edf1ef;
+}
+
+.campo__ajuda {
+    margin: 0.45rem 0 0;
+}
+
+.campo--opcoes label,
+.aceite {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+}
+
+.campo--opcoes label + label {
+    margin-top: 0.5rem;
+}
+
+.aceite {
+    margin-top: 1.25rem;
+    padding: 1rem;
+    background: #f7faf8;
+    border: 1px solid var(--cor-borda);
+    border-radius: 0.5rem;
+}
+
+.aceite input,
+.campo--opcoes input {
+    width: 1.15rem;
+    height: 1.15rem;
+    flex: 0 0 auto;
+    margin: 0.25rem 0 0;
+    accent-color: var(--cor-primaria);
+}
+
+.lista-aceites .aceite + .aceite {
+    margin-top: 0.75rem;
+}
+
+.formulario__navegacao {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    border-top: 1px solid var(--cor-borda);
+}
+
+.botao {
+    padding: 0.75rem 1.1rem;
+    color: var(--cor-superficie);
+    background: var(--cor-primaria);
+    border: 1px solid var(--cor-primaria);
+    border-radius: 0.45rem;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+}
+
+.botao:hover {
+    background: var(--cor-primaria-escura);
+    border-color: var(--cor-primaria-escura);
+}
+
+.botao--secundario {
+    color: var(--cor-primaria-escura);
+    background: var(--cor-superficie);
+    border-color: var(--cor-primaria);
+}
+
+.botao--secundario:hover {
+    color: var(--cor-superficie);
+}
+
+.campo-armadilha {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+}
+
+html[data-js="ativo"] .etapa:not([data-etapa="1"]),
+html[data-js="ativo"] [data-anterior],
+html[data-js="ativo"] [data-enviar] {
+    display: none;
+}
+
+@media (min-width: 42rem) {
+    .campo {
+        grid-column: span 6;
+    }
+
+    .campo--largo {
+        grid-column: span 12;
+    }
+}
+
+@media (max-width: 32rem) {
+    .inscricao__cabecalho,
+    .secao-interna__cabecalho {
+        flex-direction: column;
+    }
+
+    .formulario__navegacao {
+        justify-content: stretch;
+    }
+
+    .formulario__navegacao .botao {
+        flex: 1;
+    }
+}

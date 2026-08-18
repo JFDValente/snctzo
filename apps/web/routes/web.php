@@ -5,9 +5,9 @@ use App\Http\Controllers\CatalogoInscricaoController;
 use App\Http\Controllers\InscricaoController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('inicio');
-})->name('inicio');
+Route::redirect('/', '/inscricoes')->name('inicio');
+
+Route::view('inscricoes', 'inscricoes.create')->name('inscricoes.create');
 
 Route::prefix('inscricoes/catalogo')
     ->name('inscricoes.catalogo.')
