@@ -54,7 +54,7 @@
     justify-items: center;
     gap: 0.35rem;
     color: var(--cor-texto-suave);
-    font-size: 0.75rem;
+    font-size: 0.85rem;
     text-align: center;
 }
 
@@ -147,6 +147,14 @@
     font: inherit;
 }
 
+@media (max-width: 41.99rem) {
+    .campo input:not([type="checkbox"]):not([type="radio"]),
+    .campo select,
+    .campo textarea {
+        font-size: 1rem;
+    }
+}
+
 .campo textarea {
     resize: vertical;
 }
@@ -225,6 +233,7 @@
 }
 
 .botao {
+    min-height: 2.75rem;
     padding: 0.75rem 1.1rem;
     color: var(--cor-superficie);
     background: var(--cor-primaria);

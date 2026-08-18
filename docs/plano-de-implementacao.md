@@ -600,7 +600,7 @@ Objetivo: preparar o MVP para publicação sem SMTP.
 
 **Commit sugerido:** `feat: Protege formulário contra abuso`
 
-### [ ] 5.2 Ajustar responsividade e acessibilidade
+### [x] 5.2 Ajustar responsividade e acessibilidade
 
 **Requisitos:** RF-002 a RF-008
 **Dependências:** 5.1

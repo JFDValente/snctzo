@@ -151,9 +151,8 @@ const iniciarParticipantes = async () => {
                 <div class="grupo-campos">
                     <div class="campo campo--largo">
                         <label for="participante-${indice}-aluno">Aluno <span aria-hidden="true">*</span></label>
-                        <input id="participante-${indice}-aluno" data-identificador data-aluno-autocomplete type="text" list="participante-${indice}-alunos" autocomplete="off" placeholder="Digite ou escolha um aluno cadastrado">
+                        <input id="participante-${indice}-aluno" data-identificador data-aluno-autocomplete data-participante-nome name="participantes[${indice}][nome]" type="text" list="participante-${indice}-alunos" maxlength="150" autocomplete="off" placeholder="Digite ou escolha um aluno cadastrado" required>
                         <datalist id="participante-${indice}-alunos"></datalist>
-                        <input data-participante-nome name="participantes[${indice}][nome]" type="text" maxlength="150" required>
                     </div>
                     <div class="campo campo--largo">
                         <label for="participante-${indice}-curso">Curso <span aria-hidden="true">*</span></label>

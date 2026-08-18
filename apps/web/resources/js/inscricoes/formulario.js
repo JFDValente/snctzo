@@ -33,11 +33,13 @@ const iniciarFormulario = () => {
     const mensagemFormulario = formulario.querySelector('[data-formulario-mensagem]');
     let etapaAtual = 1;
     let enviando = false;
+    let proximoErro = 1;
 
     const limparErros = (etapa) => {
         etapa.querySelectorAll('.erro-campo').forEach((erro) => erro.remove());
         etapa.querySelectorAll('[aria-invalid="true"]').forEach((campo) => {
             campo.removeAttribute('aria-invalid');
+            campo.removeAttribute('aria-errormessage');
         });
     };
 
@@ -45,9 +47,18 @@ const iniciarFormulario = () => {
         campo.setAttribute('aria-invalid', 'true');
         const destino = campo.closest('.aceite, .campo') ?? campo.parentElement;
         const erro = document.createElement('p');
+        erro.id = `erro-formulario-${proximoErro++}`;
         erro.className = 'erro-campo';
+        erro.setAttribute('role', 'alert');
         erro.textContent = mensagem;
-        destino.appendChild(erro);
+
+        if (destino.classList.contains('aceite')) {
+            destino.after(erro);
+        } else {
+            destino.appendChild(erro);
+        }
+
+        campo.setAttribute('aria-errormessage', erro.id);
     };
 
     const campoPorChave = (chave) => {
