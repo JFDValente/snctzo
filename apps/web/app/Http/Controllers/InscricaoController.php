@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Inscricoes\CriarAtividade;
+use App\Actions\Inscricoes\EnviarConfirmacaoDeInscricao;
 use App\Http\Requests\StoreAtividadeRequest;
 use App\Support\Inscricoes\PeriodoDeInscricao;
 use Illuminate\Http\JsonResponse;
@@ -14,6 +15,7 @@ class InscricaoController extends Controller
         StoreAtividadeRequest $request,
         PeriodoDeInscricao $periodo,
         CriarAtividade $criarAtividade,
+        EnviarConfirmacaoDeInscricao $enviarConfirmacao,
     ): JsonResponse|RedirectResponse {
         if (! $periodo->estaAberta()) {
             if (! $request->expectsJson()) {
@@ -27,7 +29,8 @@ class InscricaoController extends Controller
             ], 422);
         }
 
-        $criarAtividade($request->validated());
+        $atividade = $criarAtividade($request->validated());
+        $enviarConfirmacao($atividade);
 
         if (! $request->expectsJson()) {
             return to_route('inscricoes.sucesso');

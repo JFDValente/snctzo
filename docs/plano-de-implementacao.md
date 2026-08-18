@@ -663,7 +663,7 @@ Objetivo: adicionar SMTP sem comprometer o cadastro já estabilizado.
 
 **Commit sugerido:** `feat: Cria email de confirmação`
 
-### [ ] 6.2 Integrar envio SMTP após a transação
+### [x] 6.2 Integrar envio SMTP após a transação
 
 **Requisitos:** RF-010
 **Dependências:** 6.1
