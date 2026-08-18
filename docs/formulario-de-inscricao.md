@@ -111,10 +111,10 @@ Fluxo do campo:
 
 1. Solicitar primeiro o e-mail.
 2. Fazer uma busca exata no backend ao concluir o preenchimento do e-mail.
-3. Se o professor existir, preencher e bloquear nome e instituição.
-4. Rejeitar o professor encontrado quando sua instituição for diferente da instituição da atividade.
-5. Se o e-mail não existir, solicitar o nome e vincular o novo professor à instituição da atividade.
-6. Se o e-mail já estiver em uso de forma incompatível com os dados informados, exibir: **“E-mail já utilizado por outro professor”**.
+3. Se o professor existir na mesma instituição, preencher e bloquear o nome, sem alterar seus dados cadastrados.
+4. Se o e-mail existir em outra instituição, exibir uma mensagem que informe a instituição do professor já cadastrado.
+5. Se o e-mail existir na mesma instituição, mas o nome já informado for diferente, sem diferenciar maiúsculas, acentos ou espaços, exibir: **“E-mail já utilizado por outro professor”**.
+6. Se o e-mail não existir, solicitar o nome e vincular o novo professor à instituição da atividade.
 
 O e-mail é obrigatório e identifica o professor de forma única, embora a chave primária continue sendo o `id` interno.
 

@@ -7,6 +7,7 @@ use App\Models\Atividade;
 use App\Models\Curso;
 use App\Models\Instituicao;
 use App\Models\Professor;
+use App\Support\Normalizacao\NormalizadorDeTexto;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -131,7 +132,15 @@ class CriarAtividade
             ],
         );
 
+        $texto = new NormalizadorDeTexto;
+
         if ($professor->instituicao_id !== $instituicao->id) {
+            throw ValidationException::withMessages([
+                'professor_responsavel.email' => "E-mail já cadastrado para um professor da instituição {$professor->instituicao->nome}.",
+            ]);
+        }
+
+        if ($texto->chaveDeComparacao($professor->nome) !== $texto->chaveDeComparacao($dados['nome'])) {
             throw ValidationException::withMessages([
                 'professor_responsavel.email' => 'E-mail já utilizado por outro professor.',
             ]);

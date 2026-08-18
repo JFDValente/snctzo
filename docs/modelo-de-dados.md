@@ -117,7 +117,7 @@ UNIQUE (token_submissao)
 CHECK (participa_dia_20 = TRUE OR participa_dia_21 = TRUE)
 ```
 
-A aplicação garante que o professor responsável pertença à instituição do curso principal.
+A aplicação garante que o professor responsável pertença à instituição do curso principal e que um professor já cadastrado só seja reutilizado quando o nome informado for compatível com o seu cadastro.
 
 ### `atividade_aluno`
 

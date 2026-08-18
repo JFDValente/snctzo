@@ -10,6 +10,13 @@ const buscarProfessor = async (email) => {
     return resposta.json();
 };
 
+const normalizarNome = (valor) => valor
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLocaleLowerCase('pt-BR');
+
 const iniciarProfessorResponsavel = () => {
     const formulario = document.querySelector('#formulario-inscricao');
     const email = formulario?.querySelector('[data-professor-responsavel-email]');
@@ -22,17 +29,44 @@ const iniciarProfessorResponsavel = () => {
 
     let instituicaoSelecionada = null;
     let instituicaoNova = false;
+    let professorEncontrado = null;
+
+    const atualizarProfessorEncontrado = () => {
+        email.setCustomValidity('');
+        mensagem.textContent = '';
+
+        if (professorEncontrado === null) {
+            return;
+        }
+
+        if (
+            instituicaoNova
+            || (instituicaoSelecionada !== null && professorEncontrado.instituicao.id !== instituicaoSelecionada.id)
+        ) {
+            nome.readOnly = false;
+            email.setCustomValidity(`E-mail já cadastrado para um professor da instituição ${professorEncontrado.instituicao.nome}.`);
+            mensagem.textContent = email.validationMessage;
+
+            return;
+        }
+
+        if (nome.value && normalizarNome(nome.value) !== normalizarNome(professorEncontrado.nome)) {
+            nome.readOnly = false;
+            email.setCustomValidity('E-mail já utilizado por outro professor.');
+            mensagem.textContent = email.validationMessage;
+
+            return;
+        }
+
+        nome.value = professorEncontrado.nome;
+        nome.readOnly = true;
+        mensagem.textContent = 'Professor cadastrado encontrado. O nome foi bloqueado para edição.';
+    };
 
     formulario.addEventListener('inscricao:instituicao-alterada', ({ detail }) => {
         instituicaoSelecionada = detail.instituicao;
         instituicaoNova = detail.nova;
-        email.setCustomValidity('');
-        mensagem.textContent = '';
-
-        if (nome.readOnly) {
-            nome.value = '';
-            nome.readOnly = false;
-        }
+        atualizarProfessorEncontrado();
     });
 
     email.addEventListener('blur', async () => {
@@ -52,29 +86,16 @@ const iniciarProfessorResponsavel = () => {
                 return;
             }
 
-            if (instituicaoSelecionada === null && !instituicaoNova) {
-                email.setCustomValidity('Selecione a instituição antes de informar o professor responsável.');
-                mensagem.textContent = email.validationMessage;
-
-                return;
-            }
-
-            if (instituicaoNova || dados.professor.instituicao.id !== instituicaoSelecionada.id) {
-                email.setCustomValidity('E-mail já utilizado por outro professor.');
-                mensagem.textContent = 'E-mail já utilizado por outro professor.';
-
-                return;
-            }
-
-            nome.value = dados.professor.nome;
-            nome.readOnly = true;
-            mensagem.textContent = 'Professor cadastrado encontrado. O nome foi bloqueado para edição.';
+            professorEncontrado = dados.professor;
+            atualizarProfessorEncontrado();
         } catch (erro) {
             mensagem.textContent = erro.message;
         }
     });
 
     email.addEventListener('input', () => {
+        professorEncontrado = null;
+
         if (nome.readOnly) {
             nome.value = '';
             nome.readOnly = false;
@@ -83,6 +104,8 @@ const iniciarProfessorResponsavel = () => {
         email.setCustomValidity('');
         mensagem.textContent = '';
     });
+
+    nome.addEventListener('input', atualizarProfessorEncontrado);
 };
 
 document.addEventListener('DOMContentLoaded', iniciarProfessorResponsavel);

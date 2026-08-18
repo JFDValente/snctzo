@@ -135,9 +135,11 @@ class StoreAtividadeRequest extends FormRequest
 
     private function validarRelacionamentos(Validator $validator): void
     {
+        $texto = new NormalizadorDeTexto;
         $instituicaoId = $this->integer('instituicao.id') ?: null;
         $cursoId = $this->integer('curso_principal.id') ?: null;
         $professor = Professor::query()
+            ->with('instituicao:id,nome')
             ->where('email', $this->input('professor_responsavel.email'))
             ->first();
 
@@ -150,6 +152,15 @@ class StoreAtividadeRequest extends FormRequest
         }
 
         if ($professor !== null && (int) $professor->instituicao_id !== $instituicaoId) {
+            $validator->errors()->add(
+                'professor_responsavel.email',
+                "E-mail já cadastrado para um professor da instituição {$professor->instituicao->nome}.",
+            );
+
+            return;
+        }
+
+        if ($professor !== null && $texto->chaveDeComparacao($professor->nome) !== $texto->chaveDeComparacao($this->input('professor_responsavel.nome'))) {
             $validator->errors()->add('professor_responsavel.email', 'E-mail já utilizado por outro professor.');
         }
     }
