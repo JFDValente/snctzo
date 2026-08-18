@@ -697,7 +697,7 @@ Objetivo: adicionar SMTP sem comprometer o cadastro já estabilizado.
 
 Objetivo: colocar uma versão validada no subdomínio de `sicsu.net`.
 
-### [ ] 7.1 Preparar artefato de produção
+### [x] 7.1 Preparar artefato de produção
 
 **Dependências:** Gate 5; Gate 6 é opcional para a primeira publicação
 
