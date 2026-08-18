@@ -18,7 +18,8 @@ O formulário cadastra, individualmente, cada atividade que participará da SNCT
 - O backend repete todas as validações antes de persistir a inscrição.
 - Cada preenchimento recebe um token único. O backend aceita o token uma única vez para impedir duplicidade por clique duplo ou reenvio do navegador.
 - Após o envio, o público não pode editar nem cancelar a atividade. Qualquer alteração depende da organização.
-- A confirmação exibe somente: **“Inscrição enviada com sucesso”**.
+- A confirmação exibe somente: **“Inscrição enviada com sucesso”**, seguida de um botão para iniciar outra inscrição.
+- Atualizar a página de confirmação redireciona para o início do formulário.
 - O sistema não gera protocolo público.
 
 ## 3. Disponibilidade do formulário
@@ -40,11 +41,9 @@ A abertura e o encerramento das inscrições serão controlados por variáveis d
 
 **Realização do evento:**
 
-- 20 de outubro de 2026;
-- 21 de outubro de 2026;
+- 20 de outubro de 2026, das 9h às 21h;
+- 21 de outubro de 2026, das 9h às 17h;
 - local: Centro Esportivo Miécimo da Silva.
-
-Os horários serão exibidos somente depois de configurados. Enquanto estiverem ausentes, o banner mostrará apenas as datas.
 
 Quando houver prazo de encerramento configurado, exibir:
 
@@ -135,8 +134,8 @@ Oficina e experiência permanecem apenas como exemplos. O formulário não possu
 
 Caixas de seleção:
 
-- 20/10/2026;
-- 21/10/2026.
+- 20/10/2026, das 9h às 21h;
+- 21/10/2026, das 9h às 17h.
 
 O usuário pode selecionar um ou ambos os dias. Pelo menos um dia é obrigatório.
 
@@ -171,6 +170,7 @@ Regras:
 - O frontend pré-carrega os alunos e cursos da instituição para autocomplete.
 - Ao selecionar um aluno existente, nome e curso ficam bloqueados.
 - O usuário pode cadastrar um aluno novo e escolher ou criar seu curso dentro da instituição.
+- O campo para informar o novo curso só aparece ao escolher **Outro curso**.
 - O sistema permite duplicidade global de alunos porque não existe uma chave forte, como matrícula.
 
 #### Participante professor
@@ -187,6 +187,7 @@ Regras:
 - O e-mail vem antes do nome e dispara uma busca exata no backend.
 - Ao encontrar um professor, preencher e bloquear nome e instituição.
 - Para um professor novo, liberar nome e permitir selecionar ou criar a instituição.
+- O campo para informar a instituição só aparece ao escolher **Outra instituição**.
 - Professores não serão pré-carregados no frontend.
 - Aplicar a mesma validação de conflito de e-mail usada para o professor responsável.
 

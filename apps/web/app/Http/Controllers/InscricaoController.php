@@ -31,6 +31,7 @@ class InscricaoController extends Controller
 
         $atividade = $criarAtividade($request->validated());
         $enviarConfirmacao($atividade);
+        $request->session()->flash('inscricao_enviada', true);
 
         if (! $request->expectsJson()) {
             return to_route('inscricoes.sucesso');

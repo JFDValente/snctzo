@@ -4,7 +4,7 @@
     <div class="aviso">
         <div>
             <h2>Realização do evento</h2>
-            <p>20 e 21 de outubro de 2026, no Centro Esportivo Miécimo da Silva.</p>
+            <p>20/10, das 9h às 21h, e 21/10, das 9h às 17h, no Centro Esportivo Miécimo da Silva.</p>
         </div>
     </div>
 

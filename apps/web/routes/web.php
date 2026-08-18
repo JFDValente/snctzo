@@ -3,13 +3,14 @@
 use App\Http\Controllers\BuscarProfessorController;
 use App\Http\Controllers\CatalogoInscricaoController;
 use App\Http\Controllers\InscricaoController;
+use App\Http\Controllers\InscricaoSucessoController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/inscricoes')->name('inicio');
 
 Route::view('inscricoes', 'inscricoes.create')->name('inscricoes.create');
 
-Route::view('inscricoes/sucesso', 'inscricoes.sucesso')->name('inscricoes.sucesso');
+Route::get('inscricoes/sucesso', InscricaoSucessoController::class)->name('inscricoes.sucesso');
 
 Route::prefix('inscricoes/catalogo')
     ->name('inscricoes.catalogo.')

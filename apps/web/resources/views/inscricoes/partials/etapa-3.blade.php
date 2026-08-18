@@ -9,8 +9,8 @@
         </div>
         <fieldset class="campo campo--largo campo--opcoes">
             <legend>Dias de participação <span aria-hidden="true">*</span></legend>
-            <label><input name="atividade[participa_dia_20]" type="checkbox" value="1"> 20/10/2026</label>
-            <label><input name="atividade[participa_dia_21]" type="checkbox" value="1"> 21/10/2026</label>
+            <label><input name="atividade[participa_dia_20]" type="checkbox" value="1"> 20/10/2026 — das 9h às 21h</label>
+            <label><input name="atividade[participa_dia_21]" type="checkbox" value="1"> 21/10/2026 — das 9h às 17h</label>
         </fieldset>
     </div>
 

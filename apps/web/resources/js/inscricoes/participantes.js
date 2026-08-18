@@ -158,7 +158,10 @@ const iniciarParticipantes = async () => {
                         <label for="participante-${indice}-curso">Curso <span aria-hidden="true">*</span></label>
                         <select id="participante-${indice}-curso" data-aluno-curso required></select>
                         <input data-aluno-curso-id name="participantes[${indice}][curso][id]" type="hidden">
-                        <input data-aluno-curso-nome name="participantes[${indice}][curso][nome]" type="text" maxlength="150" placeholder="Informe o novo curso" disabled>
+                    </div>
+                    <div class="campo campo--largo" data-aluno-curso-novo hidden>
+                        <label for="participante-${indice}-curso-novo">Informe o novo curso <span aria-hidden="true">*</span></label>
+                        <input id="participante-${indice}-curso-novo" data-aluno-curso-nome name="participantes[${indice}][curso][nome]" type="text" maxlength="150" disabled>
                     </div>
                 </div>
             `;
@@ -169,6 +172,7 @@ const iniciarParticipantes = async () => {
             const seletorCurso = corpo.querySelector('[data-aluno-curso]');
             const campoCursoId = corpo.querySelector('[data-aluno-curso-id]');
             const campoCursoNome = corpo.querySelector('[data-aluno-curso-nome]');
+            const campoNovoCurso = corpo.querySelector('[data-aluno-curso-novo]');
             const campoId = cartao.querySelector('[data-participante-id]');
             const cursosPorId = new Map(cursos.map((curso) => [String(curso.id), curso]));
             const alunosPorRotulo = new Map();
@@ -188,8 +192,10 @@ const iniciarParticipantes = async () => {
                 nome.required = true;
                 seletorCurso.disabled = false;
                 campoCursoId.value = '';
-                campoCursoNome.disabled = seletorCurso.value !== NOVO_CURSO;
-                campoCursoNome.required = seletorCurso.value === NOVO_CURSO;
+                const novoCurso = seletorCurso.value === NOVO_CURSO;
+                campoNovoCurso.hidden = !novoCurso;
+                campoCursoNome.disabled = !novoCurso;
+                campoCursoNome.required = novoCurso;
             };
 
             autocomplete.addEventListener('input', () => {
@@ -212,6 +218,7 @@ const iniciarParticipantes = async () => {
                 campoCursoNome.value = '';
                 campoCursoNome.disabled = true;
                 campoCursoNome.required = false;
+                campoNovoCurso.hidden = true;
                 validarDuplicidades();
             });
 
@@ -219,6 +226,7 @@ const iniciarParticipantes = async () => {
                 liberarAlunoNovo();
                 const novoCurso = seletorCurso.value === NOVO_CURSO;
                 campoCursoId.value = novoCurso || !seletorCurso.value ? '' : seletorCurso.value;
+                campoNovoCurso.hidden = !novoCurso;
                 campoCursoNome.disabled = !novoCurso;
                 campoCursoNome.required = novoCurso;
 
@@ -247,7 +255,10 @@ const iniciarParticipantes = async () => {
                         <label for="participante-${indice}-instituicao">Instituição <span aria-hidden="true">*</span></label>
                         <select id="participante-${indice}-instituicao" data-professor-instituicao required></select>
                         <input data-professor-instituicao-id name="participantes[${indice}][instituicao][id]" type="hidden">
-                        <input data-professor-instituicao-nome name="participantes[${indice}][instituicao][nome]" type="text" maxlength="150" placeholder="Informe a instituição" disabled>
+                    </div>
+                    <div class="campo campo--largo" data-professor-instituicao-nova hidden>
+                        <label for="participante-${indice}-instituicao-nova">Informe a instituição <span aria-hidden="true">*</span></label>
+                        <input id="participante-${indice}-instituicao-nova" data-professor-instituicao-nome name="participantes[${indice}][instituicao][nome]" type="text" maxlength="150" disabled>
                     </div>
                 </div>
             `;
@@ -257,6 +268,7 @@ const iniciarParticipantes = async () => {
             const seletorInstituicao = corpo.querySelector('[data-professor-instituicao]');
             const campoInstituicaoId = corpo.querySelector('[data-professor-instituicao-id]');
             const campoInstituicaoNome = corpo.querySelector('[data-professor-instituicao-nome]');
+            const campoNovaInstituicao = corpo.querySelector('[data-professor-instituicao-nova]');
             const campoId = cartao.querySelector('[data-participante-id]');
             const mensagem = cartao.querySelector('[data-participante-mensagem]');
 
@@ -266,11 +278,16 @@ const iniciarParticipantes = async () => {
                 campoId.value = '';
                 nome.readOnly = false;
                 seletorInstituicao.disabled = false;
+                const outra = seletorInstituicao.value === OUTRA_INSTITUICAO;
+                campoNovaInstituicao.hidden = !outra;
+                campoInstituicaoNome.disabled = !outra;
+                campoInstituicaoNome.required = outra;
             };
 
             seletorInstituicao.addEventListener('change', () => {
                 const outra = seletorInstituicao.value === OUTRA_INSTITUICAO;
                 campoInstituicaoId.value = outra || !seletorInstituicao.value ? '' : seletorInstituicao.value;
+                campoNovaInstituicao.hidden = !outra;
                 campoInstituicaoNome.disabled = !outra;
                 campoInstituicaoNome.required = outra;
 
@@ -310,6 +327,7 @@ const iniciarParticipantes = async () => {
                     campoInstituicaoNome.value = '';
                     campoInstituicaoNome.disabled = true;
                     campoInstituicaoNome.required = false;
+                    campoNovaInstituicao.hidden = true;
                     mensagem.textContent = 'Professor cadastrado encontrado. Os dados foram bloqueados para edição.';
                 } catch (erro) {
                     mensagem.textContent = erro.message;

@@ -10,17 +10,24 @@
     @endphp
 
     <section class="inscricao-apresentacao">
-        <div class="conteiner">
-            <p class="rotulo">SNCTZO 2026</p>
-            <h1>Inscrições de atividades SNCTZO 2026</h1>
-            <p>Preencha uma inscrição para cada atividade que será apresentada no evento.</p>
+        <div class="conteiner inscricao-apresentacao__conteudo">
+            <div>
+                <p class="rotulo">SNCTZO 2026</p>
+                <h1>Inscrições de atividades SNCTZO 2026</h1>
+                <p>Preencha uma inscrição para cada atividade que será apresentada no evento.</p>
+                <p><strong>20/10, das 9h às 21h · 21/10, das 9h às 17h</strong></p>
 
-            @if ($encerramento !== null)
-                <p class="inscricao-apresentacao__prazo">
-                    Este formulário deve ser preenchido pelo responsável da instituição até
-                    {{ $encerramento->translatedFormat('d/m/Y \à\s H\hi') }}.
-                </p>
-            @endif
+                @if ($encerramento !== null)
+                    <p class="inscricao-apresentacao__prazo">
+                        Este formulário deve ser preenchido pelo responsável da instituição até
+                        {{ $encerramento->translatedFormat('d/m/Y \à\s H\hi') }}.
+                    </p>
+                @endif
+            </div>
+
+            <figure class="inscricao-apresentacao__banner">
+                <img src="{{ asset('imagens/banner-snctzo-2026.jpeg') }}" width="900" height="1600" alt="Cartaz da SNCTZO 2026, com o tema Ciência Delas, realizada em 20 e 21 de outubro no Centro Esportivo Miecimo da Silva.">
+            </figure>
         </div>
     </section>
 
