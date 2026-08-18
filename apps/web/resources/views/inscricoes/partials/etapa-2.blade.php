@@ -34,7 +34,7 @@
         </div>
         <div class="campo campo--link-instituicao">
             <label for="instituicao-outros-links">Outros links</label>
-            <textarea id="instituicao-outros-links" name="instituicao[outros_links]" rows="2"></textarea>
+            <textarea id="instituicao-outros-links" name="instituicao[outros_links]" rows="1"></textarea>
         </div>
         <div class="campo campo--largo">
             <label for="curso-principal">Curso principal <span aria-hidden="true">*</span></label>
@@ -62,6 +62,6 @@
                 <input id="responsavel-nome" name="professor_responsavel[nome]" type="text" maxlength="150" autocomplete="name" required data-professor-responsavel-nome>
             </div>
         </div>
-        <p class="mensagem-campo" data-professor-responsavel-mensagem aria-live="polite"></p>
+        <p id="professor-responsavel-mensagem" class="mensagem-campo" data-professor-responsavel-mensagem aria-live="polite"></p>
     </section>
 </fieldset>

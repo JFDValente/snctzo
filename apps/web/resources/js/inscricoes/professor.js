@@ -30,8 +30,14 @@ const iniciarProfessorResponsavel = () => {
     let instituicaoSelecionada = null;
     let instituicaoNova = false;
     let professorEncontrado = null;
+    let consultaAtual = 0;
+    let consultaPendente = false;
 
     const atualizarProfessorEncontrado = () => {
+        if (consultaPendente) {
+            return;
+        }
+
         email.setCustomValidity('');
         mensagem.textContent = '';
 
@@ -71,6 +77,7 @@ const iniciarProfessorResponsavel = () => {
 
     email.addEventListener('blur', async () => {
         const valor = email.value.trim();
+        const consulta = ++consultaAtual;
         nome.readOnly = false;
         email.setCustomValidity('');
         mensagem.textContent = '';
@@ -79,21 +86,42 @@ const iniciarProfessorResponsavel = () => {
             return;
         }
 
+        consultaPendente = true;
+        email.setCustomValidity('Aguarde a verificação do e-mail cadastrado.');
+        mensagem.textContent = 'Verificando e-mail cadastrado…';
+
         try {
             const dados = await buscarProfessor(valor);
 
+            if (consulta !== consultaAtual) {
+                return;
+            }
+
+            consultaPendente = false;
+
             if (dados.professor === null) {
+                professorEncontrado = null;
+                atualizarProfessorEncontrado();
+
                 return;
             }
 
             professorEncontrado = dados.professor;
             atualizarProfessorEncontrado();
         } catch (erro) {
+            if (consulta !== consultaAtual) {
+                return;
+            }
+
+            consultaPendente = false;
+            email.setCustomValidity('Não foi possível consultar o professor. Tente novamente.');
             mensagem.textContent = erro.message;
         }
     });
 
     email.addEventListener('input', () => {
+        consultaAtual += 1;
+        consultaPendente = false;
         professorEncontrado = null;
 
         if (nome.readOnly) {

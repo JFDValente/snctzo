@@ -45,6 +45,17 @@ const iniciarFormulario = () => {
 
     const adicionarErro = (campo, mensagem) => {
         campo.setAttribute('aria-invalid', 'true');
+        const mensagemDoProfessor = campo.matches('[data-professor-responsavel-email]')
+            ? formulario.querySelector('[data-professor-responsavel-mensagem]')
+            : null;
+
+        if (mensagemDoProfessor) {
+            mensagemDoProfessor.textContent = mensagem;
+            campo.setAttribute('aria-errormessage', mensagemDoProfessor.id);
+
+            return;
+        }
+
         const destino = campo.closest('.aceite, .campo') ?? campo.parentElement;
         const erro = document.createElement('p');
         erro.id = `erro-formulario-${proximoErro++}`;
