@@ -521,7 +521,7 @@ Objetivo: implementar a experiência pública completa sobre o backend validado.
 
 **Commit sugerido:** `feat: Adiciona participantes dinâmicos`
 
-### [ ] 4.4 Implementar navegação e validação por etapa
+### [x] 4.4 Implementar navegação e validação por etapa
 
 **Requisitos:** RF-002 a RF-006
 **Dependências:** 4.3

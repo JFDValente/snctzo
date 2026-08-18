@@ -267,10 +267,15 @@ input[readonly] {
     background: #edf1ef;
 }
 
-html[data-js="ativo"] .etapa:not([data-etapa="1"]),
-html[data-js="ativo"] [data-anterior],
-html[data-js="ativo"] [data-enviar] {
+html[data-js="ativo"] .etapa:not([data-etapa="1"]) {
     display: none;
+}
+
+.erro-campo {
+    margin: 0.5rem 0 0;
+    color: #a31515;
+    font-size: 0.9rem;
+    font-weight: 700;
 }
 
 @media (min-width: 42rem) {
