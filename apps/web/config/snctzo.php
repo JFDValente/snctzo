@@ -22,4 +22,8 @@ return [
     'termos' => [
         'versao' => env('TERMOS_VERSAO', '2026.1'),
     ],
+
+    'email' => [
+        'confirmacao_ativa' => env('EMAIL_CONFIRMACAO_ATIVA', false),
+    ],
 ];

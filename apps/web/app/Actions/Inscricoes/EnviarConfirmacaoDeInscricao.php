@@ -12,7 +12,10 @@ class EnviarConfirmacaoDeInscricao
 {
     public function __invoke(Atividade $atividade): void
     {
-        if ($atividade->email_confirmacao_enviado_em !== null) {
+        if (
+            ! config('snctzo.email.confirmacao_ativa')
+            || $atividade->email_confirmacao_enviado_em !== null
+        ) {
             return;
         }
 

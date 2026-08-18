@@ -60,7 +60,8 @@ A aplicação será publicada em um **subdomínio de `sicsu.net`**, separado do 
 
 O subdomínio terá:
 
-- document root apontando para `apps/web/public`;
+- document root próprio em `domains/sicsu.net/public_html/snctzo`, contendo somente os arquivos públicos;
+- aplicação Laravel clonada em `domains/sicsu.net/snctzo-app/apps/web`, fora de `public_html`;
 - PHP 8.4;
 - SSL próprio ou certificado que cubra o subdomínio;
 - `.env` próprio;
@@ -119,7 +120,7 @@ O deploy usará Git e SSH. O procedimento deverá:
 3. Preparar os caches do Laravel.
 4. Executar migrations.
 5. Garantir escrita em `storage` e `bootstrap/cache`.
-6. Confirmar o document root em `apps/web/public`.
+6. Publicar somente os arquivos de `apps/web/public` no document root do subdomínio por meio do wrapper versionado em `deploy/hostinger`.
 7. Validar HTTPS e o envio de e-mail.
 
 Se o PHP do terminal SSH diferir do PHP do subdomínio, os comandos usarão explicitamente o binário do PHP 8.4.
@@ -135,6 +136,7 @@ Se o PHP do terminal SSH diferir do PHP do subdomínio, os comandos usarão expl
 - Conteúdo: cópia completa da inscrição e dos termos aceitos.
 - Momento: envio síncrono depois da confirmação da transação do banco.
 - Falha: não desfaz a inscrição; registra erro no log e mantém `email_confirmacao_enviado_em` vazio.
+- Ativação: `EMAIL_CONFIRMACAO_ATIVA=false` por padrão. O envio só é habilitado depois da configuração e validação do SMTP de produção; enquanto desabilitado, não envia mensagem, não atualiza o instante de confirmação e não registra conteúdo da inscrição.
 
 O Free Business Email limita cada caixa postal a **100 mensagens enviadas em uma janela móvel de 24 horas**. O limite pode mudar e deverá ser confirmado no hPanel antes da publicação. Como cada inscrição gera uma mensagem, o envio poderá falhar depois que a cota for atingida; o cadastro continuará funcionando.
 
