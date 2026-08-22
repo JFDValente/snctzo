@@ -12,9 +12,9 @@
                 <h1 style="margin: 0 0 16px; font-size: 28px; line-height: 1.2;">Inscrição de atividade recebida</h1>
                 <p style="margin: 0 0 24px;">Esta mensagem contém uma cópia completa da inscrição enviada.</p>
 
-                <h2 style="font-size: 20px;">Instituição e curso</h2>
+                <h2 style="font-size: 20px;">Unidade acadêmica e curso</h2>
                 <p>
-                    <strong>Instituição:</strong> {{ $atividade->curso->instituicao->nome }}<br>
+                    <strong>Unidade acadêmica:</strong> {{ $atividade->curso->instituicao->nome }}<br>
                     <strong>Curso principal:</strong> {{ $atividade->curso->nome }}
                 </p>
                 @if ($atividade->curso->instituicao->instagram || $atividade->curso->instituicao->facebook || $atividade->curso->instituicao->site || $atividade->curso->instituicao->outros_links)
@@ -56,6 +56,7 @@
                 <h2 style="font-size: 20px;">Atividade</h2>
                 <p>
                     <strong>Nome:</strong> {{ $atividade->nome }}<br>
+                    <strong>Forma de apresentação:</strong> {{ $atividade->forma_apresentacao === 'remota' ? 'Remota' : 'Presencial' }}<br>
                     <strong>Dias de participação:</strong> {{ implode(', ', $diasDeParticipacao) }}
                 </p>
                 <p><strong>Resumo:</strong><br>{!! nl2br(e($atividade->resumo)) !!}</p>
@@ -78,6 +79,7 @@
                 <p>Todos os itens abaixo foram confirmados na inscrição.</p>
                 <ul>
                     <li>O professor responsável deve constar na lista de participantes caso deva ser incluído no resumo ou e-book.</li>
+                    <li>É proibido o uso de banner durante o evento.</li>
                     <li>A montagem dos estandes ocorrerá na tarde de 20/10/2026.</li>
                     <li>As atividades devem ser dinâmicas e interativas.</li>
                     <li>Não é permitido nenhum tipo de comércio no interior do ginásio durante o evento.</li>

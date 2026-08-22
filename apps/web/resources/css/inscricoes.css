@@ -242,17 +242,76 @@
     border-radius: 0.6rem;
 }
 
-.participante__cabecalho {
+.participante-ficha__tipo {
     display: flex;
-    gap: 1rem;
-    justify-content: space-between;
+    gap: 0.75rem;
     align-items: center;
-    margin-bottom: 1rem;
+    flex-wrap: wrap;
 }
 
-.participante__cabecalho h3 {
+.participante-ficha__tipo > span {
+    font-weight: 700;
+}
+
+.participante-ficha__tipo label {
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
     margin: 0;
-    font-size: 1.1rem;
+}
+
+.participante-ficha__tipo input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    accent-color: var(--cor-primaria);
+}
+
+.participante-ficha__acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.25rem;
+}
+
+.participante-ficha__acoes .botao,
+.participante__remover {
+    display: grid;
+    place-items: center;
+    min-width: 2.75rem;
+    padding-inline: 0.75rem;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.participantes-tabela {
+    margin-top: 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--cor-borda);
+    border-radius: 0.6rem;
+}
+
+.participantes-tabela table {
+    width: 100%;
+    min-width: 42rem;
+    border-collapse: collapse;
+}
+
+.participantes-tabela th,
+.participantes-tabela td {
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--cor-borda);
+    text-align: left;
+    vertical-align: middle;
+}
+
+.participantes-tabela th {
+    color: var(--cor-primaria-escura);
+    background: #f7faf8;
+    font-size: 0.85rem;
+}
+
+.participantes-tabela tbody tr:last-child td {
+    border-bottom: 0;
 }
 
 .formulario__navegacao {

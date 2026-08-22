@@ -4,6 +4,7 @@
 
 - O termo oficial do domínio é **atividade**.
 - Cada atividade pertence a um curso principal.
+- Cada atividade registra uma forma de apresentação: presencial ou remota.
 - A instituição da atividade é obtida por meio do curso; a atividade não armazena `instituicao_id`.
 - Cada atividade possui exatamente um professor responsável.
 - Cada atividade possui pelo menos um participante, aluno ou professor.
@@ -100,9 +101,10 @@ O aluno não possui matrícula nem outra chave forte. Não haverá constraint gl
 | `curso_id` | `BIGINT UNSIGNED` | não | chave estrangeira para o curso principal |
 | `professor_responsavel_id` | `BIGINT UNSIGNED` | não | chave estrangeira para `professores.id` |
 | `nome` | `VARCHAR(255)` | não | nome da atividade |
+| `forma_apresentacao` | `VARCHAR(16)` | não | `presencial` ou `remota` |
 | `participa_dia_20` | `BOOLEAN` | não | participação em 20/10/2026 |
 | `participa_dia_21` | `BOOLEAN` | não | participação em 21/10/2026 |
-| `resumo` | `TEXT` | não | máximo de 5.000 caracteres na aplicação |
+| `resumo` | `TEXT` | não | máximo de 3.000 caracteres na aplicação |
 | `observacoes` | `TEXT` | sim | máximo de 5.000 caracteres na aplicação |
 | `termos_aceitos_em` | `DATETIME` | não | instante da submissão aceita |
 | `versao_termos` | `VARCHAR(32)` | não | versão dos textos aceitos |
@@ -159,6 +161,8 @@ O relacionamento de participação é independente de `professor_responsavel_id`
 ## 5. Resolução de registros
 
 ### Instituição e curso
+
+No formulário público, a instituição é apresentada com o rótulo **unidade acadêmica**; a nomenclatura técnica e o nome da tabela permanecem `instituicao`/`instituicoes`.
 
 - Comparar nomes sem diferenciar maiúsculas ou acentos.
 - Reutilizar o registro existente quando houver correspondência.

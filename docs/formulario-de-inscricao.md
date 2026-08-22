@@ -68,32 +68,33 @@ Quando houver prazo de encerramento configurado, exibir:
 - Os expositores devem respeitar os demais expositores, o público visitante e a comissão organizadora.
 - As regras estabelecidas pela comissão organizadora devem ser acatadas para garantir a melhor execução possível do evento.
 - Ao chegar ao evento, o responsável pela atividade deve apresentar-se à comissão organizadora para confirmar a presença e a participação da instituição.
+- Realização do Evento: É proibido o uso de banner durante o evento.
 
-## 5. Etapa 2 — Instituição, curso e responsável
+## 5. Etapa 2 — Unidade acadêmica, curso e responsável
 
-### Instituição
+### Unidade acadêmica
 
-O campo lista dinamicamente todas as instituições cadastradas, incluindo inicialmente:
+No formulário, a entidade de instituição é apresentada ao usuário como **unidade acadêmica**. O campo lista dinamicamente todas as unidades cadastradas, incluindo inicialmente:
 
 - FCBS — Faculdade de Ciências Biológicas e Saúde;
 - FCEE — Faculdade de Ciências Exatas e Engenharias;
-- Outra instituição.
+- Outra unidade acadêmica.
 
 FCBS e FCEE são instituições independentes no sistema.
 
-Ao selecionar uma instituição existente:
+Ao selecionar uma unidade acadêmica existente:
 
 - carregar nome, Instagram, Facebook, site e outros links;
 - bloquear todos os campos contra edição;
 - reservar correções cadastrais para a organização.
 
-Ao selecionar **Outra instituição**:
+Ao selecionar **Outra unidade acadêmica**:
 
 - exigir o nome;
 - permitir Instagram, Facebook, site e outros links;
 - persistir a instituição para inscrições futuras.
 
-Instagram, Facebook, site e outros links são opcionais. Instagram e Facebook aceitam URL ou identificador de perfil. O site aceita endereço com ou sem protocolo; o backend normaliza o protocolo e valida a URL. “Outros links” será armazenado como um único texto.
+Instagram, Facebook, site e outros links são opcionais. Instagram e Facebook aceitam URL ou identificador de perfil. Para mais de um Instagram, separar os perfis por vírgula, por exemplo: `@snctzo, @uerjzonaoeste`. O site aceita endereço com ou sem protocolo; o backend normaliza o protocolo e valida a URL. “Outros links” será armazenado como um único texto.
 
 ### Curso principal
 
@@ -103,9 +104,16 @@ Instagram, Facebook, site e outros links são opcionais. Instagram e Facebook ac
 - A atividade pertence a um único curso principal.
 - Os cursos existentes não podem ser editados pelo formulário público.
 
+Cursos provisionados nesta revisão:
+
+- FCEE: Computação (CC e TCADS), Engenharia de Materiais, Engenharia de Produção, Engenharia Metalúrgica e Tecnologia em Construção Naval.
+- FCBS: Farmácia, Ciências Biológicas e Pós Graduação em Ciência e Tecnologia Ambiente (PGCTA).
+
+Durante a primeira publicação, a migration substitui integralmente o catálogo de cursos anterior por essa lista. Essa operação foi aprovada porque não há inscrições em produção neste momento; ela não deve ser reutilizada depois que existirem alunos ou atividades vinculados a cursos.
+
 ### Professor responsável
 
-Toda atividade exige exatamente um professor responsável. Ele pertence à instituição do curso principal e não entra automaticamente na lista de participantes.
+Toda atividade exige exatamente um professor responsável. Ele pertence à unidade acadêmica do curso principal e não entra automaticamente na lista de participantes.
 
 Fluxo do campo:
 
@@ -130,6 +138,13 @@ Texto de orientação:
 
 Oficina e experiência permanecem apenas como exemplos. O formulário não possui um campo separado para tipo de atividade.
 
+### Forma de apresentação
+
+Campo obrigatório, logo após o nome da atividade, com escolha exclusiva entre:
+
+- Presencial;
+- Remota.
+
 ### Dias de participação
 
 Caixas de seleção:
@@ -151,6 +166,9 @@ Exigir uma caixa **Ciente**. O professor responsável poderá ser adicionado man
 
 - Exigir pelo menos um participante.
 - Aceitar aluno ou professor como primeiro participante.
+- A ficha de inclusão apresenta **Tipo de participante** e as opções **Aluno** e **Professor** na mesma linha.
+- O botão `+` ao final da ficha inclui o participante de fato, limpa a ficha e adiciona uma linha à tabela de participantes.
+- A tabela exibe tipo, nome, curso ou unidade acadêmica, e-mail quando aplicável e uma ação `X` para remover a linha.
 - Permitir a inclusão dinâmica de quantos participantes forem necessários.
 - Exigir escolha exclusiva entre **Aluno** e **Professor** em cada registro.
 - Permitir que a mesma pessoa participe de várias atividades.
@@ -179,15 +197,15 @@ Campos:
 
 - e-mail;
 - nome;
-- instituição.
+- unidade acadêmica.
 
 Regras:
 
 - O professor participante pode pertencer a outra instituição.
 - O e-mail vem antes do nome e dispara uma busca exata no backend.
-- Ao encontrar um professor, preencher e bloquear nome e instituição.
-- Para um professor novo, liberar nome e permitir selecionar ou criar a instituição.
-- O campo para informar a instituição só aparece ao escolher **Outra instituição**.
+- Ao encontrar um professor, preencher e bloquear nome e unidade acadêmica.
+- Para um professor novo, liberar nome e permitir selecionar ou criar a unidade acadêmica.
+- O campo para informar a unidade acadêmica só aparece ao escolher **Outra unidade acadêmica**.
 - Professores não serão pré-carregados no frontend.
 - Aplicar a mesma validação de conflito de e-mail usada para o professor responsável.
 
@@ -201,7 +219,7 @@ Bloquear:
 
 ### Resumo da atividade
 
-Campo obrigatório com altura inicial de seis linhas e limite de 5.000 caracteres.
+Campo obrigatório com altura inicial de seis linhas e limite de 3.000 caracteres, informado ao usuário na tela.
 
 Texto de orientação:
 
@@ -213,12 +231,13 @@ Texto de orientação:
 
 Texto de orientação:
 
-> Espaço destinado a informações adicionais sobre a atividade, como preferência de localização em relação ao som ou a outras instituições. Cada estande contará com testeira para identificação da instituição, sete mesas e cinco cadeiras. Informe também a necessidade de tomada elétrica.
+> Espaço destinado a informações adicionais sobre a atividade, como preferência de localização em relação ao som ou a outras unidades acadêmicas. Cada estande contará com sete mesas e cinco cadeiras. Informe também a necessidade de tomada elétrica.
 
 ## 7. Etapa 4 — Informações sobre a realização da atividade
 
 Exigir uma caixa **Ciente** para cada declaração:
 
+- É proibido o uso de banner durante o evento.
 - A montagem dos estandes ocorrerá na tarde de 20/10/2026.
 - As atividades devem ser dinâmicas e interativas.
 - Não é permitido nenhum tipo de comércio no interior do ginásio durante o evento.
@@ -283,10 +302,10 @@ Uma falha no e-mail não desfaz a inscrição. O sistema registra o erro no log 
 
 O e-mail será enviado ao professor responsável via SMTP após a persistência da atividade. Ele conterá uma cópia completa da inscrição, incluindo:
 
-- instituição e links;
+- unidade acadêmica e links;
 - curso principal;
 - professor responsável;
-- nome, dias, resumo e observações da atividade;
+- nome, forma de apresentação, dias, resumo e observações da atividade;
 - lista de participantes;
 - todos os textos aceitos;
 - versão e data dos termos.

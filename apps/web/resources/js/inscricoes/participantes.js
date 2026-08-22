@@ -30,18 +30,20 @@ const buscarProfessor = async (email) => {
 
 const iniciarParticipantes = async () => {
     const formulario = document.querySelector('#formulario-inscricao');
+    const ficha = formulario?.querySelector('[data-participante-ficha]');
     const lista = formulario?.querySelector('[data-participantes]');
-    const botaoAdicionar = formulario?.querySelector('[data-adicionar-participante]');
+    const enviados = formulario?.querySelector('[data-participantes-enviados]');
+    const tabela = formulario?.querySelector('[data-participantes-tabela]');
     const mensagemGeral = formulario?.querySelector('[data-participantes-mensagem]');
 
-    if (!formulario || !lista || !botaoAdicionar || !mensagemGeral) {
+    if (!formulario || !ficha || !lista || !enviados || !tabela || !mensagemGeral) {
         return;
     }
 
-    let proximoIndice = 0;
     let cursos = [];
     let alunos = [];
     let instituicoes = [];
+    let participantes = [];
 
     try {
         const resposta = await fetch('/inscricoes/catalogo/instituicoes', {
@@ -54,60 +56,8 @@ const iniciarParticipantes = async () => {
 
         instituicoes = (await resposta.json()).instituicoes;
     } catch {
-        mensagemGeral.textContent = 'Não foi possível carregar as instituições para professores participantes.';
+        mensagemGeral.textContent = 'Não foi possível carregar as unidades acadêmicas para professores participantes.';
     }
-
-    const validarDuplicidades = () => {
-        const vistos = new Map();
-        let possuiDuplicidade = false;
-
-        lista.querySelectorAll('[data-participante]').forEach((cartao) => {
-            const tipo = cartao.querySelector('[data-tipo]:checked')?.value;
-            const id = cartao.querySelector('[data-participante-id]').value;
-            const mensagem = cartao.querySelector('[data-participante-mensagem]');
-            const identificador = cartao.querySelector('[data-identificador]');
-            const campoCursoId = cartao.querySelector('[data-aluno-curso-id]');
-            const campoCursoNome = cartao.querySelector('[data-aluno-curso-nome]');
-            const curso = campoCursoId?.value || normalizarChave(campoCursoNome?.value ?? '');
-            const nome = normalizarChave(cartao.querySelector('[data-participante-nome]').value);
-            const email = normalizarChave(cartao.querySelector('[data-participante-email]')?.value ?? '');
-            let chave = null;
-
-            mensagem.textContent = '';
-            identificador?.setCustomValidity('');
-
-            if (tipo === 'aluno' && id) {
-                chave = `aluno:${id}`;
-            }
-
-            if (tipo === 'aluno' && !id && nome && curso) {
-                chave = `aluno-novo:${nome}:${curso}`;
-            }
-
-            if (tipo === 'professor' && id) {
-                chave = `professor:${id}`;
-            }
-
-            if (tipo === 'professor' && !id && email) {
-                chave = `professor-novo:${email}`;
-            }
-
-            if (chave && vistos.has(chave)) {
-                const texto = 'Um participante não pode ser incluído duas vezes.';
-                mensagem.textContent = texto;
-                identificador?.setCustomValidity(texto);
-                possuiDuplicidade = true;
-            }
-
-            if (chave) {
-                vistos.set(chave, cartao);
-            }
-        });
-
-        mensagemGeral.textContent = possuiDuplicidade
-            ? 'Remova ou corrija os participantes repetidos para continuar.'
-            : '';
-    };
 
     const preencherCursos = (seletor) => {
         seletor.replaceChildren(
@@ -119,65 +69,200 @@ const iniciarParticipantes = async () => {
 
     const preencherInstituicoes = (seletor) => {
         seletor.replaceChildren(
-            criarOpcao('', 'Selecione a instituição'),
+            criarOpcao('', 'Selecione a unidade acadêmica'),
             ...instituicoes.map((instituicao) => criarOpcao(instituicao.id, instituicao.nome)),
-            criarOpcao(OUTRA_INSTITUICAO, 'Outra instituição'),
+            criarOpcao(OUTRA_INSTITUICAO, 'Outra unidade acadêmica'),
         );
     };
 
-    const criarParticipante = () => {
-        const indice = proximoIndice++;
-        const cartao = document.createElement('section');
-        cartao.className = 'participante';
-        cartao.dataset.participante = indice;
-        cartao.innerHTML = `
-            <div class="participante__cabecalho">
-                <h3>Participante</h3>
-                <button class="botao botao--secundario" type="button" data-remover-participante>Remover</button>
+    const chaveDoParticipante = (participante) => {
+        if (participante.tipo === 'aluno' && participante.id) {
+            return `aluno:${participante.id}`;
+        }
+
+        if (participante.tipo === 'aluno') {
+            const curso = participante.curso.id || normalizarChave(participante.curso.nome ?? '');
+            const nome = normalizarChave(participante.nome);
+
+            return nome && curso ? `aluno-novo:${nome}:${curso}` : null;
+        }
+
+        if (participante.id) {
+            return `professor:${participante.id}`;
+        }
+
+        return participante.email ? `professor-novo:${normalizarChave(participante.email)}` : null;
+    };
+
+    const adicionarCampoOculto = (nome, valor) => {
+        if (valor === null || valor === undefined || valor === '') {
+            return;
+        }
+
+        const campo = document.createElement('input');
+        campo.type = 'hidden';
+        campo.name = nome;
+        campo.value = valor;
+        enviados.appendChild(campo);
+    };
+
+    const atualizarCamposEnviados = () => {
+        enviados.replaceChildren();
+
+        participantes.forEach((participante, indice) => {
+            const raiz = `participantes[${indice}]`;
+            adicionarCampoOculto(`${raiz}[tipo]`, participante.tipo);
+            adicionarCampoOculto(`${raiz}[id]`, participante.id);
+            adicionarCampoOculto(`${raiz}[nome]`, participante.nome);
+
+            if (participante.tipo === 'aluno') {
+                adicionarCampoOculto(`${raiz}[curso][id]`, participante.curso.id);
+                adicionarCampoOculto(`${raiz}[curso][nome]`, participante.curso.nome);
+
+                return;
+            }
+
+            adicionarCampoOculto(`${raiz}[email]`, participante.email);
+            adicionarCampoOculto(`${raiz}[instituicao][id]`, participante.instituicao.id);
+            adicionarCampoOculto(`${raiz}[instituicao][nome]`, participante.instituicao.nome);
+        });
+    };
+
+    const renderizarTabela = () => {
+        lista.replaceChildren();
+        tabela.hidden = participantes.length === 0;
+
+        participantes.forEach((participante, indice) => {
+            const linha = document.createElement('tr');
+            linha.dataset.participanteLinha = indice;
+            const tipo = participante.tipo === 'aluno' ? 'Aluno' : 'Professor';
+            const cursoOuInstituicao = participante.tipo === 'aluno'
+                ? participante.curso.nome
+                : participante.instituicao.nome;
+
+            [
+                tipo,
+                participante.nome,
+                cursoOuInstituicao,
+                participante.email ?? '—',
+            ].forEach((valor) => {
+                const celula = document.createElement('td');
+                celula.textContent = valor;
+                linha.appendChild(celula);
+            });
+
+            const acoes = document.createElement('td');
+            const remover = document.createElement('button');
+            remover.className = 'botao botao--secundario participante__remover';
+            remover.type = 'button';
+            remover.dataset.removerParticipante = indice;
+            remover.setAttribute('aria-label', `Remover ${tipo.toLocaleLowerCase('pt-BR')} ${participante.nome}`);
+            remover.textContent = 'X';
+            acoes.appendChild(remover);
+            linha.appendChild(acoes);
+            lista.appendChild(linha);
+        });
+
+        atualizarCamposEnviados();
+    };
+
+    const limparMensagem = () => {
+        mensagemGeral.textContent = '';
+    };
+
+    const criarParticipante = (dados) => {
+        const chave = chaveDoParticipante(dados);
+
+        if (chave !== null && participantes.some((participante) => chaveDoParticipante(participante) === chave)) {
+            mensagemGeral.textContent = 'Um participante não pode ser incluído duas vezes.';
+
+            return false;
+        }
+
+        participantes.push(dados);
+        limparMensagem();
+        renderizarTabela();
+
+        return true;
+    };
+
+    const camposDaFichaSaoValidos = () => {
+        const campos = [...ficha.querySelectorAll('input, select, textarea')]
+            .filter((campo) => !campo.disabled && campo.type !== 'hidden');
+        const campoInvalido = campos.find((campo) => !campo.checkValidity());
+
+        if (!campoInvalido) {
+            return true;
+        }
+
+        campoInvalido.reportValidity();
+
+        return false;
+    };
+
+    const renderizarFicha = (tipo = 'aluno') => {
+        ficha.innerHTML = `
+            <div class="participante-ficha__tipo" role="group" aria-labelledby="tipo-participante">
+                <span id="tipo-participante">Tipo de participante <span aria-hidden="true">*</span></span>
+                <label><input data-tipo name="tipo-participante" type="radio" value="aluno" ${tipo === 'aluno' ? 'checked' : ''} required> Aluno</label>
+                <label><input data-tipo name="tipo-participante" type="radio" value="professor" ${tipo === 'professor' ? 'checked' : ''}> Professor</label>
             </div>
-            <fieldset class="campo campo--opcoes">
-                <legend>Tipo de participante <span aria-hidden="true">*</span></legend>
-                <label><input data-tipo name="participantes[${indice}][tipo]" type="radio" value="aluno" checked required> Aluno</label>
-                <label><input data-tipo name="participantes[${indice}][tipo]" type="radio" value="professor" required> Professor</label>
-            </fieldset>
-            <input data-participante-id name="participantes[${indice}][id]" type="hidden">
             <div data-corpo-participante></div>
+            <div class="participante-ficha__acoes">
+                <button class="botao" type="button" data-salvar-participante aria-label="Adicionar participante">+</button>
+            </div>
             <p class="mensagem-campo" data-participante-mensagem aria-live="polite"></p>
         `;
 
-        const corpo = cartao.querySelector('[data-corpo-participante]');
+        const corpo = ficha.querySelector('[data-corpo-participante]');
+        const mensagem = ficha.querySelector('[data-participante-mensagem]');
+
+        const configurarSalvar = (obterDados) => {
+            const botaoAnterior = ficha.querySelector('[data-salvar-participante]');
+            const botao = botaoAnterior.cloneNode(true);
+            botaoAnterior.replaceWith(botao);
+
+            botao.addEventListener('click', () => {
+                if (!camposDaFichaSaoValidos()) {
+                    return;
+                }
+
+                if (criarParticipante(obterDados())) {
+                    renderizarFicha();
+                }
+            });
+        };
+
         const renderizarAluno = () => {
             corpo.innerHTML = `
                 <div class="grupo-campos">
                     <div class="campo campo--largo">
-                        <label for="participante-${indice}-aluno">Aluno <span aria-hidden="true">*</span></label>
-                        <input id="participante-${indice}-aluno" data-identificador data-aluno-autocomplete data-participante-nome name="participantes[${indice}][nome]" type="text" list="participante-${indice}-alunos" maxlength="150" autocomplete="off" placeholder="Digite ou escolha um aluno cadastrado" required>
-                        <datalist id="participante-${indice}-alunos"></datalist>
+                        <label for="participante-aluno">Aluno <span aria-hidden="true">*</span></label>
+                        <input id="participante-aluno" data-aluno-autocomplete data-participante-nome type="text" list="participante-alunos" maxlength="150" autocomplete="off" placeholder="Digite ou escolha um aluno cadastrado" required>
+                        <datalist id="participante-alunos"></datalist>
                     </div>
                     <div class="campo campo--largo">
-                        <label for="participante-${indice}-curso">Curso <span aria-hidden="true">*</span></label>
-                        <select id="participante-${indice}-curso" data-aluno-curso required></select>
-                        <input data-aluno-curso-id name="participantes[${indice}][curso][id]" type="hidden">
+                        <label for="participante-curso">Curso <span aria-hidden="true">*</span></label>
+                        <select id="participante-curso" data-aluno-curso required></select>
+                        <input data-aluno-curso-id type="hidden">
                     </div>
                     <div class="campo campo--largo" data-aluno-curso-novo hidden>
-                        <label for="participante-${indice}-curso-novo">Informe o novo curso <span aria-hidden="true">*</span></label>
-                        <input id="participante-${indice}-curso-novo" data-aluno-curso-nome name="participantes[${indice}][curso][nome]" type="text" maxlength="150" disabled>
+                        <label for="participante-curso-novo">Informe o novo curso <span aria-hidden="true">*</span></label>
+                        <input id="participante-curso-novo" data-aluno-curso-nome type="text" maxlength="150" disabled>
                     </div>
                 </div>
             `;
 
             const autocomplete = corpo.querySelector('[data-aluno-autocomplete]');
             const listaAlunos = corpo.querySelector('datalist');
-            const nome = corpo.querySelector('[data-participante-nome]');
             const seletorCurso = corpo.querySelector('[data-aluno-curso]');
             const campoCursoId = corpo.querySelector('[data-aluno-curso-id]');
             const campoCursoNome = corpo.querySelector('[data-aluno-curso-nome]');
             const campoNovoCurso = corpo.querySelector('[data-aluno-curso-novo]');
-            const campoId = cartao.querySelector('[data-participante-id]');
             const cursosPorId = new Map(cursos.map((curso) => [String(curso.id), curso]));
             const alunosPorRotulo = new Map();
+            let alunoId = '';
 
-            listaAlunos.replaceChildren();
             alunos.forEach((aluno) => {
                 const curso = cursosPorId.get(String(aluno.curso_id));
                 const rotulo = `${aluno.nome} — ${curso?.nome ?? 'Curso cadastrado'}`;
@@ -187,9 +272,8 @@ const iniciarParticipantes = async () => {
             preencherCursos(seletorCurso);
 
             const liberarAlunoNovo = () => {
-                campoId.value = '';
-                nome.readOnly = false;
-                nome.required = true;
+                alunoId = '';
+                autocomplete.readOnly = false;
                 seletorCurso.disabled = false;
                 campoCursoId.value = '';
                 const novoCurso = seletorCurso.value === NOVO_CURSO;
@@ -202,16 +286,14 @@ const iniciarParticipantes = async () => {
                 const aluno = alunosPorRotulo.get(autocomplete.value);
 
                 if (!aluno) {
-                    nome.value = autocomplete.value;
                     liberarAlunoNovo();
-                    validarDuplicidades();
 
                     return;
                 }
 
-                campoId.value = aluno.id;
-                nome.value = aluno.nome;
-                nome.readOnly = true;
+                alunoId = String(aluno.id);
+                autocomplete.value = aluno.nome;
+                autocomplete.readOnly = true;
                 seletorCurso.value = aluno.curso_id;
                 seletorCurso.disabled = true;
                 campoCursoId.value = aluno.curso_id;
@@ -219,7 +301,6 @@ const iniciarParticipantes = async () => {
                 campoCursoNome.disabled = true;
                 campoCursoNome.required = false;
                 campoNovoCurso.hidden = true;
-                validarDuplicidades();
             });
 
             seletorCurso.addEventListener('change', () => {
@@ -233,32 +314,40 @@ const iniciarParticipantes = async () => {
                 if (!novoCurso) {
                     campoCursoNome.value = '';
                 }
-
-                validarDuplicidades();
             });
 
-            [nome, campoCursoNome].forEach((campo) => campo.addEventListener('input', validarDuplicidades));
+            configurarSalvar(() => ({
+                tipo: 'aluno',
+                id: alunoId,
+                nome: autocomplete.value.trim(),
+                curso: {
+                    id: campoCursoId.value,
+                    nome: campoCursoNome.value.trim()
+                        || cursosPorId.get(campoCursoId.value)?.nome
+                        || '',
+                },
+            }));
         };
 
         const renderizarProfessor = () => {
             corpo.innerHTML = `
                 <div class="grupo-campos">
                     <div class="campo">
-                        <label for="participante-${indice}-email">E-mail <span aria-hidden="true">*</span></label>
-                        <input id="participante-${indice}-email" data-identificador data-participante-email name="participantes[${indice}][email]" type="email" maxlength="254" required>
+                        <label for="participante-email">E-mail <span aria-hidden="true">*</span></label>
+                        <input id="participante-email" data-participante-email type="email" maxlength="254" required>
                     </div>
                     <div class="campo">
-                        <label for="participante-${indice}-nome">Nome <span aria-hidden="true">*</span></label>
-                        <input id="participante-${indice}-nome" data-participante-nome name="participantes[${indice}][nome]" type="text" maxlength="150" required>
+                        <label for="participante-nome">Nome <span aria-hidden="true">*</span></label>
+                        <input id="participante-nome" data-participante-nome type="text" maxlength="150" required>
                     </div>
                     <div class="campo campo--largo">
-                        <label for="participante-${indice}-instituicao">Instituição <span aria-hidden="true">*</span></label>
-                        <select id="participante-${indice}-instituicao" data-professor-instituicao required></select>
-                        <input data-professor-instituicao-id name="participantes[${indice}][instituicao][id]" type="hidden">
+                        <label for="participante-instituicao">Unidade acadêmica <span aria-hidden="true">*</span></label>
+                        <select id="participante-instituicao" data-professor-instituicao required></select>
+                        <input data-professor-instituicao-id type="hidden">
                     </div>
                     <div class="campo campo--largo" data-professor-instituicao-nova hidden>
-                        <label for="participante-${indice}-instituicao-nova">Informe a instituição <span aria-hidden="true">*</span></label>
-                        <input id="participante-${indice}-instituicao-nova" data-professor-instituicao-nome name="participantes[${indice}][instituicao][nome]" type="text" maxlength="150" disabled>
+                        <label for="participante-instituicao-nova">Informe a unidade acadêmica <span aria-hidden="true">*</span></label>
+                        <input id="participante-instituicao-nova" data-professor-instituicao-nome type="text" maxlength="150" disabled>
                     </div>
                 </div>
             `;
@@ -269,13 +358,14 @@ const iniciarParticipantes = async () => {
             const campoInstituicaoId = corpo.querySelector('[data-professor-instituicao-id]');
             const campoInstituicaoNome = corpo.querySelector('[data-professor-instituicao-nome]');
             const campoNovaInstituicao = corpo.querySelector('[data-professor-instituicao-nova]');
-            const campoId = cartao.querySelector('[data-participante-id]');
-            const mensagem = cartao.querySelector('[data-participante-mensagem]');
+            const instituicoesPorId = new Map(instituicoes.map((instituicao) => [String(instituicao.id), instituicao]));
+            let professorId = '';
+            let consultaAtual = 0;
 
             preencherInstituicoes(seletorInstituicao);
 
             const liberarProfessorNovo = () => {
-                campoId.value = '';
+                professorId = '';
                 nome.readOnly = false;
                 seletorInstituicao.disabled = false;
                 const outra = seletorInstituicao.value === OUTRA_INSTITUICAO;
@@ -294,31 +384,37 @@ const iniciarParticipantes = async () => {
                 if (!outra) {
                     campoInstituicaoNome.value = '';
                 }
-
-                validarDuplicidades();
             });
 
             email.addEventListener('blur', async () => {
                 const valor = email.value.trim();
+                const consulta = ++consultaAtual;
                 mensagem.textContent = '';
                 liberarProfessorNovo();
 
                 if (!valor || !email.validity.valid) {
-                    validarDuplicidades();
-
                     return;
                 }
+
+                email.setCustomValidity('Aguarde a verificação do e-mail cadastrado.');
+                mensagem.textContent = 'Verificando e-mail cadastrado…';
 
                 try {
                     const dados = await buscarProfessor(valor);
 
+                    if (consulta !== consultaAtual) {
+                        return;
+                    }
+
+                    email.setCustomValidity('');
+
                     if (dados.professor === null) {
-                        validarDuplicidades();
+                        mensagem.textContent = '';
 
                         return;
                     }
 
-                    campoId.value = dados.professor.id;
+                    professorId = String(dados.professor.id);
                     nome.value = dados.professor.nome;
                     nome.readOnly = true;
                     seletorInstituicao.value = dados.professor.instituicao.id;
@@ -330,64 +426,86 @@ const iniciarParticipantes = async () => {
                     campoNovaInstituicao.hidden = true;
                     mensagem.textContent = 'Professor cadastrado encontrado. Os dados foram bloqueados para edição.';
                 } catch (erro) {
+                    if (consulta !== consultaAtual) {
+                        return;
+                    }
+
+                    email.setCustomValidity('Não foi possível consultar o professor. Tente novamente.');
                     mensagem.textContent = erro.message;
                 }
-
-                validarDuplicidades();
             });
 
             email.addEventListener('input', () => {
-                if (campoId.value) {
-                    campoId.value = '';
+                consultaAtual += 1;
+                email.setCustomValidity('');
+                mensagem.textContent = '';
+
+                if (professorId) {
+                    professorId = '';
                     nome.value = '';
                     nome.readOnly = false;
                     seletorInstituicao.disabled = false;
                     campoInstituicaoId.value = '';
                     seletorInstituicao.value = '';
                 }
-
-                validarDuplicidades();
             });
-            [nome, campoInstituicaoNome].forEach((campo) => campo.addEventListener('input', validarDuplicidades));
+
+            configurarSalvar(() => ({
+                tipo: 'professor',
+                id: professorId,
+                nome: nome.value.trim(),
+                email: email.value.trim(),
+                instituicao: {
+                    id: campoInstituicaoId.value,
+                    nome: campoInstituicaoNome.value.trim()
+                        || instituicoesPorId.get(campoInstituicaoId.value)?.nome
+                        || '',
+                },
+            }));
         };
 
-        const renderizar = () => {
-            cartao.querySelector('[data-participante-id]').value = '';
+        ficha.querySelectorAll('[data-tipo]').forEach((radio) => radio.addEventListener('change', () => {
+            limparMensagem();
 
-            if (cartao.querySelector('[data-tipo]:checked').value === 'aluno') {
+            if (radio.value === 'aluno' && radio.checked) {
                 renderizarAluno();
-            } else {
-                renderizarProfessor();
             }
 
-            validarDuplicidades();
-        };
+            if (radio.value === 'professor' && radio.checked) {
+                renderizarProfessor();
+            }
+        }));
 
-        cartao.querySelectorAll('[data-tipo]').forEach((radio) => radio.addEventListener('change', renderizar));
-        cartao.querySelector('[data-remover-participante]').addEventListener('click', () => {
-            cartao.remove();
-            validarDuplicidades();
-        });
-        renderizar();
-
-        return cartao;
+        if (tipo === 'aluno') {
+            renderizarAluno();
+        } else {
+            renderizarProfessor();
+        }
     };
 
-    const adicionarParticipante = () => {
-        lista.appendChild(criarParticipante());
-    };
+    lista.addEventListener('click', (evento) => {
+        const botao = evento.target.closest('[data-remover-participante]');
+
+        if (!botao) {
+            return;
+        }
+
+        participantes.splice(Number(botao.dataset.removerParticipante), 1);
+        limparMensagem();
+        renderizarTabela();
+    });
 
     formulario.addEventListener('inscricao:instituicao-alterada', ({ detail }) => {
         cursos = detail.cursos;
         alunos = detail.alunos;
-        lista.replaceChildren();
-        adicionarParticipante();
+        participantes = [];
+        limparMensagem();
+        renderizarTabela();
+        renderizarFicha();
     });
 
-    botaoAdicionar.addEventListener('click', adicionarParticipante);
-    if (!lista.children.length) {
-        adicionarParticipante();
-    }
+    renderizarTabela();
+    renderizarFicha();
 };
 
 document.addEventListener('DOMContentLoaded', iniciarParticipantes);

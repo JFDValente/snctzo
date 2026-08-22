@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
     'curso_id',
     'professor_responsavel_id',
     'nome',
+    'forma_apresentacao',
     'participa_dia_20',
     'participa_dia_21',
     'resumo',

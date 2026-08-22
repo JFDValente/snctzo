@@ -159,7 +159,7 @@ const iniciarFormulario = () => {
     };
 
     const validarParticipantes = (etapa) => {
-        const participantes = etapa.querySelectorAll('[data-participante]');
+        const participantes = etapa.querySelectorAll('[data-participante-linha]');
 
         if (participantes.length) {
             return true;
@@ -177,7 +177,7 @@ const iniciarFormulario = () => {
         let valido = true;
 
         etapa.querySelectorAll('input, select, textarea').forEach((campo) => {
-            if (campo.disabled || campo.type === 'hidden' || campo.checkValidity()) {
+            if (campo.disabled || campo.type === 'hidden' || campo.closest('[data-participante-ficha]') || campo.checkValidity()) {
                 return;
             }
 
@@ -202,7 +202,11 @@ const iniciarFormulario = () => {
         });
         progresso.forEach((item) => {
             const numero = Number(item.dataset.progresso);
-            item.toggleAttribute('aria-current', numero === etapaAtual);
+            if (numero === etapaAtual) {
+                item.setAttribute('aria-current', 'step');
+            } else {
+                item.removeAttribute('aria-current');
+            }
             item.classList.toggle('progresso__etapa--concluida', numero < etapaAtual);
         });
         botaoAnterior.hidden = etapaAtual === 1;

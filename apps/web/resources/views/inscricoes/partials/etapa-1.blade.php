@@ -23,6 +23,7 @@
             <li>São proibidas atividades que incitem violência ou discriminação de qualquer tipo.</li>
             <li>Os expositores devem zelar pelo espaço público, respeitar o público e acatar as regras da organização.</li>
             <li>Ao chegar ao evento, o responsável deve apresentar-se à comissão organizadora para confirmar a presença.</li>
+            <li>Realização do Evento: É proibido o uso de banner durante o evento.</li>
         </ul>
     </div>
 </fieldset>

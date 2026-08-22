@@ -46,6 +46,7 @@ class CriarAtividade
                     'curso_id' => $curso->id,
                     'professor_responsavel_id' => $professorResponsavel->id,
                     'nome' => $dados['atividade']['nome'],
+                    'forma_apresentacao' => $dados['atividade']['forma_apresentacao'],
                     'participa_dia_20' => $dados['atividade']['participa_dia_20'] ?? false,
                     'participa_dia_21' => $dados['atividade']['participa_dia_21'] ?? false,
                     'resumo' => $dados['atividade']['resumo'],
