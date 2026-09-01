@@ -13,6 +13,8 @@ O sistema gerenciará inscrições de atividades para a SNCTZO. A primeira entre
 
 O módulo público terá uma única categoria de usuário: o professor responsável, considerado cadastrante e contato oficial. O formulário não exige autenticação.
 
+O primeiro módulo administrativo é autenticado, serve a consulta de atividades e está especificado em [Gerenciamento administrativo](./admin-gerenciamento.md). Todos os usuários autenticados possuem o mesmo acesso nesta etapa.
+
 ## 2. Arquitetura da aplicação
 
 - Monorepo.
@@ -198,7 +200,6 @@ Professores serão pesquisados por e-mail exato no backend. Alunos da instituiç
 
 ## 14. Fora do MVP e débitos registrados
 
-- Backoffice autenticado.
 - Perfis e permissões avançados.
 - Módulo offline de presença.
 - Persistência de rascunhos.
