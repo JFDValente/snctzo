@@ -20,7 +20,7 @@ return [
     ],
 
     'termos' => [
-        'versao' => env('TERMOS_VERSAO', '2026.2'),
+        'versao' => env('TERMOS_VERSAO', '2026.3'),
     ],
 
     'email' => [

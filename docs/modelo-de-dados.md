@@ -4,7 +4,6 @@
 
 - O termo oficial do domínio é **atividade**.
 - Cada atividade pertence a um curso principal.
-- Cada atividade registra uma forma de apresentação: presencial ou remota.
 - A instituição da atividade é obtida por meio do curso; a atividade não armazena `instituicao_id`.
 - Cada atividade possui exatamente um professor responsável.
 - Cada atividade possui pelo menos um participante, aluno ou professor.
@@ -36,10 +35,6 @@ A exigência de pelo menos um participante considera a união de alunos e profes
 |---|---|---:|---|
 | `id` | `BIGINT UNSIGNED` | não | chave primária |
 | `nome` | `VARCHAR(150)` | não | único, sem diferenciar maiúsculas ou acentos |
-| `instagram` | `VARCHAR(255)` | sim | URL ou perfil textual |
-| `facebook` | `VARCHAR(255)` | sim | URL ou perfil textual |
-| `site` | `VARCHAR(2048)` | sim | URL normalizada |
-| `outros_links` | `TEXT` | sim | texto livre em uma única coluna |
 | `created_at` | `DATETIME` | não | gerenciado pelo Laravel |
 | `updated_at` | `DATETIME` | não | gerenciado pelo Laravel |
 
@@ -74,7 +69,7 @@ A comparação do nome ignora maiúsculas e acentos. O mesmo nome pode existir e
 | `id` | `BIGINT UNSIGNED` | não | chave primária |
 | `instituicao_id` | `BIGINT UNSIGNED` | não | chave estrangeira para `instituicoes.id` |
 | `nome` | `VARCHAR(150)` | não | nome completo |
-| `email` | `VARCHAR(254)` | não | único e armazenado em minúsculas |
+| `email` | `VARCHAR(254)` | sim | único quando informado e armazenado em minúsculas |
 | `created_at` | `DATETIME` | não | gerenciado pelo Laravel |
 | `updated_at` | `DATETIME` | não | gerenciado pelo Laravel |
 
@@ -101,11 +96,14 @@ O aluno não possui matrícula nem outra chave forte. Não haverá constraint gl
 | `curso_id` | `BIGINT UNSIGNED` | não | chave estrangeira para o curso principal |
 | `professor_responsavel_id` | `BIGINT UNSIGNED` | não | chave estrangeira para `professores.id` |
 | `nome` | `VARCHAR(255)` | não | nome da atividade |
-| `forma_apresentacao` | `VARCHAR(16)` | não | `presencial` ou `remota` |
 | `participa_dia_20` | `BOOLEAN` | não | participação em 20/10/2026 |
 | `participa_dia_21` | `BOOLEAN` | não | participação em 21/10/2026 |
 | `resumo` | `TEXT` | não | máximo de 3.000 caracteres na aplicação |
 | `observacoes` | `TEXT` | sim | máximo de 5.000 caracteres na aplicação |
+| `instagram` | `VARCHAR(255)` | sim | perfil ou URL da atividade |
+| `facebook` | `VARCHAR(255)` | sim | perfil ou URL da atividade |
+| `site` | `VARCHAR(2048)` | sim | URL normalizada da atividade |
+| `outros_links` | `TEXT` | sim | texto livre da atividade |
 | `termos_aceitos_em` | `DATETIME` | não | instante da submissão aceita |
 | `versao_termos` | `VARCHAR(32)` | não | versão dos textos aceitos |
 | `email_confirmacao_enviado_em` | `DATETIME` | sim | preenchido após envio bem-sucedido |
@@ -179,7 +177,7 @@ No formulário público, a instituição é apresentada com o rótulo **unidade 
 ### Aluno
 
 - Permitir a seleção de aluno pré-carregado da instituição.
-- Criar um registro quando o usuário optar por um aluno novo.
+- Criar um registro quando o usuário informar um aluno novo e selecionar um curso fixo.
 - Não tentar deduplicação global automática por nome e curso.
 
 ## 6. Regras de participação

@@ -1,5 +1,12 @@
 # Decisões estruturais do projeto
 
+## Revisão de setembro de 2026
+
+- O catálogo público será fixo, com FCBS, FCEE e sete cursos definidos pela organização.
+- Para adequar a primeira versão, a migration reinicia os dados operacionais, as unidades acadêmicas e os cursos.
+- Redes sociais e links pertencem à atividade, não à unidade acadêmica.
+- Professor participante pode não possuir e-mail; somente o professor responsável exige e-mail único.
+
 ## 1. Produto e entregas
 
 O sistema gerenciará inscrições de atividades para a SNCTZO. A primeira entrega cobre o formulário público, a validação e a persistência. O backoffice autenticado e o controle offline de presença serão desenvolvidos depois.
@@ -213,3 +220,11 @@ Professores serão pesquisados por e-mail exato no backend. Alunos da instituiç
 - [Limites do Hostinger Email](https://www.hostinger.com/support/4625828-parameters-and-limits-of-hostinger-email/)
 - [Limites da hospedagem Hostinger](https://www.hostinger.com/support/6976044-parameters-and-limits-of-hosting-plans-in-hostinger/)
 - [Configuração de PHP por subdomínio](https://www.hostinger.com/support/4047803-how-to-change-the-php-version-for-subfolders-or-subdomains-in-hostinger/)
+# Decisões estruturais — SNCTZO 2026
+
+## Revisão de setembro de 2026
+
+- O catálogo público é fixo: duas unidades acadêmicas e sete cursos.
+- A migration de transição reinicia os dados operacionais, unidades e cursos, pois a primeira versão ainda não possui dados a preservar.
+- Redes sociais e links pertencem à atividade, não à unidade acadêmica.
+- Professores participantes podem não possuir e-mail; somente o professor responsável exige e-mail único.

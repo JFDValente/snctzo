@@ -127,6 +127,19 @@
     border-top: 1px solid var(--cor-borda);
 }
 
+.aviso--destaque {
+    margin-top: 1.25rem;
+    border-left-color: var(--cor-destaque);
+}
+
+.aviso--sucesso h1 {
+    max-width: none;
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: normal;
+}
+
 .texto-formulario h3 {
     margin-top: 1.5rem;
 }
@@ -350,6 +363,10 @@
     color: var(--cor-superficie);
 }
 
+.botao--sucesso {
+    font-weight: 400;
+}
+
 .campo-armadilha {
     position: absolute;
     width: 1px;
@@ -376,6 +393,11 @@ input[readonly] {
 
 .mensagem-formulario {
     margin: 1.5rem 0 0;
+    color: #a31515;
+    font-weight: 700;
+}
+
+.mensagem-campo--erro {
     color: #a31515;
     font-weight: 700;
 }

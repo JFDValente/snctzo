@@ -3,6 +3,7 @@
 
     <div class="lista-aceites">
         <label class="aceite"><input name="ciente_banner" type="checkbox" value="1" required> <span>É proibido o uso de banner durante o evento. <strong>Ciente.</strong></span></label>
+        <label class="aceite"><input name="ciente_espaco_professor" type="checkbox" value="1" required> <span>Cada professor terá direito a um espaço, independente da quantidade de projetos. O número de mesas disponibilizado para o professor será informado pela organização, em momento oportuno. <strong>Ciente.</strong></span></label>
         <label class="aceite"><input name="ciente_montagem" type="checkbox" value="1" required> <span>A montagem dos estandes ocorrerá na tarde de 20/10/2026. <strong>Ciente.</strong></span></label>
         <label class="aceite"><input name="ciente_atividades_interativas" type="checkbox" value="1" required> <span>As atividades devem ser dinâmicas e interativas. <strong>Ciente.</strong></span></label>
         <label class="aceite"><input name="ciente_sem_comercio" type="checkbox" value="1" required> <span>Não é permitido nenhum tipo de comércio no interior do ginásio durante o evento. <strong>Ciente.</strong></span></label>

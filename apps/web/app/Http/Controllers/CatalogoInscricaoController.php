@@ -11,7 +11,7 @@ class CatalogoInscricaoController extends Controller
     public function instituicoes(): JsonResponse
     {
         $instituicoes = Instituicao::query()
-            ->select(['id', 'nome', 'instagram', 'facebook', 'site', 'outros_links'])
+            ->select(['id', 'nome'])
             ->orderBy('nome')
             ->get();
 
@@ -32,14 +32,7 @@ class CatalogoInscricaoController extends Controller
             ->get();
 
         return response()->json([
-            'instituicao' => $instituicao->only([
-                'id',
-                'nome',
-                'instagram',
-                'facebook',
-                'site',
-                'outros_links',
-            ]),
+            'instituicao' => $instituicao->only(['id', 'nome']),
             'cursos' => $cursos,
             'alunos' => $alunos,
         ]);

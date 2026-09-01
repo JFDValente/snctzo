@@ -25,33 +25,28 @@ class StoreAtividadeRequest extends FormRequest
     {
         return [
             'token_submissao' => ['required', 'uuid'],
-            'instituicao.id' => ['nullable', 'integer', Rule::exists('instituicoes', 'id')],
-            'instituicao.nome' => ['required_without:instituicao.id', 'nullable', 'string', 'max:150'],
-            'instituicao.instagram' => ['nullable', 'string', 'max:255'],
-            'instituicao.facebook' => ['nullable', 'string', 'max:255'],
-            'instituicao.site' => ['nullable', 'url', 'max:2048'],
-            'instituicao.outros_links' => ['nullable', 'string'],
-            'curso_principal.id' => ['nullable', 'integer', Rule::exists('cursos', 'id')],
-            'curso_principal.nome' => ['required_without:curso_principal.id', 'nullable', 'string', 'max:150'],
+            'instituicao.id' => ['required', 'integer', Rule::exists('instituicoes', 'id')],
+            'curso_principal.id' => ['required', 'integer', Rule::exists('cursos', 'id')],
             'professor_responsavel.email' => ['required', 'email:rfc', 'max:254'],
             'professor_responsavel.nome' => ['required', 'string', 'max:150'],
             'atividade.nome' => ['required', 'string', 'max:255'],
-            'atividade.forma_apresentacao' => ['required', Rule::in(['presencial', 'remota'])],
             'atividade.participa_dia_20' => ['nullable', 'boolean'],
             'atividade.participa_dia_21' => ['nullable', 'boolean'],
             'atividade.resumo' => ['required', 'string', 'max:3000'],
             'atividade.observacoes' => ['nullable', 'string', 'max:5000'],
+            'atividade.instagram' => ['nullable', 'string', 'max:255'],
+            'atividade.facebook' => ['nullable', 'string', 'max:255'],
+            'atividade.site' => ['nullable', 'url', 'max:2048'],
+            'atividade.outros_links' => ['nullable', 'string'],
             'participantes' => ['required', 'array', 'min:1'],
             'participantes.*.tipo' => ['required', Rule::in(['aluno', 'professor'])],
             'participantes.*.id' => ['nullable', 'integer'],
             'participantes.*.nome' => ['nullable', 'string', 'max:150'],
-            'participantes.*.email' => ['nullable', 'email:rfc', 'max:254'],
             'participantes.*.curso.id' => ['nullable', 'integer', Rule::exists('cursos', 'id')],
-            'participantes.*.curso.nome' => ['nullable', 'string', 'max:150'],
             'participantes.*.instituicao.id' => ['nullable', 'integer', Rule::exists('instituicoes', 'id')],
-            'participantes.*.instituicao.nome' => ['nullable', 'string', 'max:150'],
             'ciente_responsavel' => ['accepted'],
             'ciente_banner' => ['accepted'],
+            'ciente_espaco_professor' => ['accepted'],
             'ciente_montagem' => ['accepted'],
             'ciente_atividades_interativas' => ['accepted'],
             'ciente_sem_comercio' => ['accepted'],
@@ -78,7 +73,6 @@ class StoreAtividadeRequest extends FormRequest
     {
         return [
             'required' => 'Este campo é obrigatório.',
-            'required_without' => 'Este campo é obrigatório.',
             'accepted' => 'Este aceite é obrigatório.',
             'array' => 'Informe uma lista válida.',
             'boolean' => 'Informe uma opção válida.',
@@ -115,21 +109,18 @@ class StoreAtividadeRequest extends FormRequest
         $dados = $this->all();
 
         foreach ([
-            'instituicao.nome', 'instituicao.instagram', 'instituicao.facebook',
-            'instituicao.outros_links', 'curso_principal.nome', 'professor_responsavel.nome',
-            'atividade.nome', 'atividade.resumo', 'atividade.observacoes',
+            'professor_responsavel.nome', 'atividade.nome', 'atividade.resumo',
+            'atividade.observacoes', 'atividade.instagram', 'atividade.facebook',
+            'atividade.outros_links',
         ] as $caminho) {
             data_set($dados, $caminho, $texto->normalizar(data_get($dados, $caminho)));
         }
 
-        data_set($dados, 'instituicao.site', $url->normalizar(data_get($dados, 'instituicao.site')));
+        data_set($dados, 'atividade.site', $url->normalizar(data_get($dados, 'atividade.site')));
         data_set($dados, 'professor_responsavel.email', $texto->normalizarEmail(data_get($dados, 'professor_responsavel.email')));
 
         foreach (data_get($dados, 'participantes', []) as $indice => $participante) {
             data_set($dados, "participantes.{$indice}.nome", $texto->normalizar($participante['nome'] ?? null));
-            data_set($dados, "participantes.{$indice}.email", $texto->normalizarEmail($participante['email'] ?? null));
-            data_set($dados, "participantes.{$indice}.curso.nome", $texto->normalizar(data_get($participante, 'curso.nome')));
-            data_set($dados, "participantes.{$indice}.instituicao.nome", $texto->normalizar(data_get($participante, 'instituicao.nome')));
         }
 
         $this->replace($dados);
@@ -205,7 +196,7 @@ class StoreAtividadeRequest extends FormRequest
             return;
         }
 
-        $chaveCurso = $participante['curso']['id'] ?? $texto->chaveDeComparacao(data_get($participante, 'curso.nome'));
+        $chaveCurso = $participante['curso']['id'] ?? null;
         $chaveNome = $texto->chaveDeComparacao($participante['nome'] ?? null);
 
         if (isset($participante['curso']['id'])) {
@@ -243,19 +234,16 @@ class StoreAtividadeRequest extends FormRequest
             return;
         }
 
-        $email = $texto->normalizarEmail($participante['email'] ?? null);
+        $nome = $texto->chaveDeComparacao($participante['nome'] ?? null);
+        $instituicaoId = data_get($participante, 'instituicao.id');
 
-        if ($email === null || empty($participante['nome'])) {
-            $validator->errors()->add("participantes.{$indice}.email", 'Informe o e-mail e o nome do professor.');
+        if ($nome === null || $instituicaoId === null) {
+            $validator->errors()->add("participantes.{$indice}.nome", 'Informe o nome e a unidade acadêmica do professor.');
 
             return;
         }
 
-        if (data_get($participante, 'instituicao.id') === null && data_get($participante, 'instituicao.nome') === null) {
-            $validator->errors()->add("participantes.{$indice}.instituicao", 'Informe a instituição do professor.');
-        }
-
-        $this->registrarDuplicidade($validator, $vistos, "professor-novo:{$email}", $indice);
+        $this->registrarDuplicidade($validator, $vistos, "professor-novo:{$nome}:{$instituicaoId}", $indice);
     }
 
     /**

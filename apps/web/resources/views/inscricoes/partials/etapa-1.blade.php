@@ -8,6 +8,10 @@
         </div>
     </div>
 
+    <div class="aviso aviso--destaque">
+        <div><h2>Aviso importante</h2><p>Realização do Evento: É proibido o uso de banner durante o evento.</p></div>
+    </div>
+
     <div class="texto-formulario">
         <p><strong>Cada atividade deve ser cadastrada individualmente.</strong></p>
         <p>Não conformidades nas respostas fornecidas neste formulário podem acarretar a suspensão da atividade.</p>
@@ -23,7 +27,6 @@
             <li>São proibidas atividades que incitem violência ou discriminação de qualquer tipo.</li>
             <li>Os expositores devem zelar pelo espaço público, respeitar o público e acatar as regras da organização.</li>
             <li>Ao chegar ao evento, o responsável deve apresentar-se à comissão organizadora para confirmar a presença.</li>
-            <li>Realização do Evento: É proibido o uso de banner durante o evento.</li>
         </ul>
     </div>
 </fieldset>

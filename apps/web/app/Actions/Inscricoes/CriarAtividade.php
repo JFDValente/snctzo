@@ -9,7 +9,6 @@ use App\Models\Instituicao;
 use App\Models\Professor;
 use App\Support\Normalizacao\NormalizadorDeTexto;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -46,11 +45,14 @@ class CriarAtividade
                     'curso_id' => $curso->id,
                     'professor_responsavel_id' => $professorResponsavel->id,
                     'nome' => $dados['atividade']['nome'],
-                    'forma_apresentacao' => $dados['atividade']['forma_apresentacao'],
                     'participa_dia_20' => $dados['atividade']['participa_dia_20'] ?? false,
                     'participa_dia_21' => $dados['atividade']['participa_dia_21'] ?? false,
                     'resumo' => $dados['atividade']['resumo'],
                     'observacoes' => $dados['atividade']['observacoes'] ?? null,
+                    'instagram' => $dados['atividade']['instagram'] ?? null,
+                    'facebook' => $dados['atividade']['facebook'] ?? null,
+                    'site' => $dados['atividade']['site'] ?? null,
+                    'outros_links' => $dados['atividade']['outros_links'] ?? null,
                     'termos_aceitos_em' => now(),
                     'versao_termos' => config('snctzo.termos.versao'),
                 ]);
@@ -87,14 +89,7 @@ class CriarAtividade
      */
     private function resolverInstituicao(array $dados): Instituicao
     {
-        if (isset($dados['id'])) {
-            return Instituicao::query()->findOrFail($dados['id']);
-        }
-
-        return Instituicao::query()->firstOrCreate(
-            ['nome' => $dados['nome']],
-            Arr::only($dados, ['instagram', 'facebook', 'site', 'outros_links']),
-        );
+        return Instituicao::query()->findOrFail($dados['id']);
     }
 
     /**
@@ -114,9 +109,8 @@ class CriarAtividade
             return $curso;
         }
 
-        return Curso::query()->firstOrCreate([
-            'instituicao_id' => $instituicao->id,
-            'nome' => $dados['nome'],
+        throw ValidationException::withMessages([
+            'curso_principal.id' => 'Selecione um curso principal cadastrado.',
         ]);
     }
 
@@ -192,9 +186,8 @@ class CriarAtividade
             return $curso;
         }
 
-        return Curso::query()->firstOrCreate([
-            'instituicao_id' => $instituicao->id,
-            'nome' => $dados['nome'],
+        throw ValidationException::withMessages([
+            'participantes' => 'Selecione um curso cadastrado para o aluno.',
         ]);
     }
 
@@ -207,15 +200,11 @@ class CriarAtividade
             return Professor::query()->findOrFail($dados['id']);
         }
 
-        $instituicao = $this->resolverInstituicao($dados['instituicao']);
-
-        return Professor::query()->firstOrCreate(
-            ['email' => $dados['email']],
-            [
-                'instituicao_id' => $instituicao->id,
-                'nome' => $dados['nome'],
-            ],
-        );
+        return Professor::query()->create([
+            'instituicao_id' => $dados['instituicao']['id'],
+            'nome' => $dados['nome'],
+            'email' => null,
+        ]);
     }
 
     private function atividadeExistente(string $token, bool $comBloqueio = false): ?Atividade

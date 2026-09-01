@@ -1,6 +1,3 @@
-const OUTRA_INSTITUICAO = '__nova__';
-const NOVO_CURSO = '__novo__';
-
 const normalizarChave = (valor) => valor
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
@@ -14,18 +11,6 @@ const criarOpcao = (valor, texto) => {
     opcao.textContent = texto;
 
     return opcao;
-};
-
-const buscarProfessor = async (email) => {
-    const resposta = await fetch(`/inscricoes/professores/busca?email=${encodeURIComponent(email)}`, {
-        headers: { Accept: 'application/json' },
-    });
-
-    if (!resposta.ok) {
-        throw new Error('Não foi possível consultar o professor.');
-    }
-
-    return resposta.json();
 };
 
 const iniciarParticipantes = async () => {
@@ -63,7 +48,6 @@ const iniciarParticipantes = async () => {
         seletor.replaceChildren(
             criarOpcao('', 'Selecione o curso'),
             ...cursos.map((curso) => criarOpcao(curso.id, curso.nome)),
-            criarOpcao(NOVO_CURSO, 'Outro curso'),
         );
     };
 
@@ -71,7 +55,6 @@ const iniciarParticipantes = async () => {
         seletor.replaceChildren(
             criarOpcao('', 'Selecione a unidade acadêmica'),
             ...instituicoes.map((instituicao) => criarOpcao(instituicao.id, instituicao.nome)),
-            criarOpcao(OUTRA_INSTITUICAO, 'Outra unidade acadêmica'),
         );
     };
 
@@ -91,7 +74,10 @@ const iniciarParticipantes = async () => {
             return `professor:${participante.id}`;
         }
 
-        return participante.email ? `professor-novo:${normalizarChave(participante.email)}` : null;
+        const nome = normalizarChave(participante.nome);
+        const instituicao = participante.instituicao.id;
+
+        return nome && instituicao ? `professor-novo:${nome}:${instituicao}` : null;
     };
 
     const adicionarCampoOculto = (nome, valor) => {
@@ -122,9 +108,7 @@ const iniciarParticipantes = async () => {
                 return;
             }
 
-            adicionarCampoOculto(`${raiz}[email]`, participante.email);
             adicionarCampoOculto(`${raiz}[instituicao][id]`, participante.instituicao.id);
-            adicionarCampoOculto(`${raiz}[instituicao][nome]`, participante.instituicao.nome);
         });
     };
 
@@ -136,15 +120,9 @@ const iniciarParticipantes = async () => {
             const linha = document.createElement('tr');
             linha.dataset.participanteLinha = indice;
             const tipo = participante.tipo === 'aluno' ? 'Aluno' : 'Professor';
-            const cursoOuInstituicao = participante.tipo === 'aluno'
-                ? participante.curso.nome
-                : participante.instituicao.nome;
-
             [
                 tipo,
                 participante.nome,
-                cursoOuInstituicao,
-                participante.email ?? '—',
             ].forEach((valor) => {
                 const celula = document.createElement('td');
                 celula.textContent = valor;
@@ -168,6 +146,7 @@ const iniciarParticipantes = async () => {
 
     const limparMensagem = () => {
         mensagemGeral.textContent = '';
+        mensagemGeral.classList.remove('mensagem-campo--erro');
     };
 
     const criarParticipante = (dados) => {
@@ -175,6 +154,7 @@ const iniciarParticipantes = async () => {
 
         if (chave !== null && participantes.some((participante) => chaveDoParticipante(participante) === chave)) {
             mensagemGeral.textContent = 'Um participante não pode ser incluído duas vezes.';
+            mensagemGeral.classList.add('mensagem-campo--erro');
 
             return false;
         }
@@ -237,7 +217,7 @@ const iniciarParticipantes = async () => {
             corpo.innerHTML = `
                 <div class="grupo-campos">
                     <div class="campo campo--largo">
-                        <label for="participante-aluno">Aluno <span aria-hidden="true">*</span></label>
+                        <label for="participante-aluno">Nome completo do aluno <span aria-hidden="true">*</span></label>
                         <input id="participante-aluno" data-aluno-autocomplete data-participante-nome type="text" list="participante-alunos" maxlength="150" autocomplete="off" placeholder="Digite ou escolha um aluno cadastrado" required>
                         <datalist id="participante-alunos"></datalist>
                     </div>
@@ -246,10 +226,6 @@ const iniciarParticipantes = async () => {
                         <select id="participante-curso" data-aluno-curso required></select>
                         <input data-aluno-curso-id type="hidden">
                     </div>
-                    <div class="campo campo--largo" data-aluno-curso-novo hidden>
-                        <label for="participante-curso-novo">Informe o novo curso <span aria-hidden="true">*</span></label>
-                        <input id="participante-curso-novo" data-aluno-curso-nome type="text" maxlength="150" disabled>
-                    </div>
                 </div>
             `;
 
@@ -257,8 +233,6 @@ const iniciarParticipantes = async () => {
             const listaAlunos = corpo.querySelector('datalist');
             const seletorCurso = corpo.querySelector('[data-aluno-curso]');
             const campoCursoId = corpo.querySelector('[data-aluno-curso-id]');
-            const campoCursoNome = corpo.querySelector('[data-aluno-curso-nome]');
-            const campoNovoCurso = corpo.querySelector('[data-aluno-curso-novo]');
             const cursosPorId = new Map(cursos.map((curso) => [String(curso.id), curso]));
             const alunosPorRotulo = new Map();
             let alunoId = '';
@@ -276,10 +250,6 @@ const iniciarParticipantes = async () => {
                 autocomplete.readOnly = false;
                 seletorCurso.disabled = false;
                 campoCursoId.value = '';
-                const novoCurso = seletorCurso.value === NOVO_CURSO;
-                campoNovoCurso.hidden = !novoCurso;
-                campoCursoNome.disabled = !novoCurso;
-                campoCursoNome.required = novoCurso;
             };
 
             autocomplete.addEventListener('input', () => {
@@ -297,23 +267,11 @@ const iniciarParticipantes = async () => {
                 seletorCurso.value = aluno.curso_id;
                 seletorCurso.disabled = true;
                 campoCursoId.value = aluno.curso_id;
-                campoCursoNome.value = '';
-                campoCursoNome.disabled = true;
-                campoCursoNome.required = false;
-                campoNovoCurso.hidden = true;
             });
 
             seletorCurso.addEventListener('change', () => {
                 liberarAlunoNovo();
-                const novoCurso = seletorCurso.value === NOVO_CURSO;
-                campoCursoId.value = novoCurso || !seletorCurso.value ? '' : seletorCurso.value;
-                campoNovoCurso.hidden = !novoCurso;
-                campoCursoNome.disabled = !novoCurso;
-                campoCursoNome.required = novoCurso;
-
-                if (!novoCurso) {
-                    campoCursoNome.value = '';
-                }
+                campoCursoId.value = seletorCurso.value;
             });
 
             configurarSalvar(() => ({
@@ -322,9 +280,7 @@ const iniciarParticipantes = async () => {
                 nome: autocomplete.value.trim(),
                 curso: {
                     id: campoCursoId.value,
-                    nome: campoCursoNome.value.trim()
-                        || cursosPorId.get(campoCursoId.value)?.nome
-                        || '',
+                    nome: cursosPorId.get(campoCursoId.value)?.nome || '',
                 },
             }));
         };
@@ -333,11 +289,7 @@ const iniciarParticipantes = async () => {
             corpo.innerHTML = `
                 <div class="grupo-campos">
                     <div class="campo">
-                        <label for="participante-email">E-mail <span aria-hidden="true">*</span></label>
-                        <input id="participante-email" data-participante-email type="email" maxlength="254" required>
-                    </div>
-                    <div class="campo">
-                        <label for="participante-nome">Nome <span aria-hidden="true">*</span></label>
+                        <label for="participante-nome">Nome completo do professor <span aria-hidden="true">*</span></label>
                         <input id="participante-nome" data-participante-nome type="text" maxlength="150" required>
                     </div>
                     <div class="campo campo--largo">
@@ -345,121 +297,27 @@ const iniciarParticipantes = async () => {
                         <select id="participante-instituicao" data-professor-instituicao required></select>
                         <input data-professor-instituicao-id type="hidden">
                     </div>
-                    <div class="campo campo--largo" data-professor-instituicao-nova hidden>
-                        <label for="participante-instituicao-nova">Informe a unidade acadêmica <span aria-hidden="true">*</span></label>
-                        <input id="participante-instituicao-nova" data-professor-instituicao-nome type="text" maxlength="150" disabled>
-                    </div>
                 </div>
             `;
 
-            const email = corpo.querySelector('[data-participante-email]');
             const nome = corpo.querySelector('[data-participante-nome]');
             const seletorInstituicao = corpo.querySelector('[data-professor-instituicao]');
             const campoInstituicaoId = corpo.querySelector('[data-professor-instituicao-id]');
-            const campoInstituicaoNome = corpo.querySelector('[data-professor-instituicao-nome]');
-            const campoNovaInstituicao = corpo.querySelector('[data-professor-instituicao-nova]');
             const instituicoesPorId = new Map(instituicoes.map((instituicao) => [String(instituicao.id), instituicao]));
-            let professorId = '';
-            let consultaAtual = 0;
 
             preencherInstituicoes(seletorInstituicao);
 
-            const liberarProfessorNovo = () => {
-                professorId = '';
-                nome.readOnly = false;
-                seletorInstituicao.disabled = false;
-                const outra = seletorInstituicao.value === OUTRA_INSTITUICAO;
-                campoNovaInstituicao.hidden = !outra;
-                campoInstituicaoNome.disabled = !outra;
-                campoInstituicaoNome.required = outra;
-            };
-
             seletorInstituicao.addEventListener('change', () => {
-                const outra = seletorInstituicao.value === OUTRA_INSTITUICAO;
-                campoInstituicaoId.value = outra || !seletorInstituicao.value ? '' : seletorInstituicao.value;
-                campoNovaInstituicao.hidden = !outra;
-                campoInstituicaoNome.disabled = !outra;
-                campoInstituicaoNome.required = outra;
-
-                if (!outra) {
-                    campoInstituicaoNome.value = '';
-                }
-            });
-
-            email.addEventListener('blur', async () => {
-                const valor = email.value.trim();
-                const consulta = ++consultaAtual;
-                mensagem.textContent = '';
-                liberarProfessorNovo();
-
-                if (!valor || !email.validity.valid) {
-                    return;
-                }
-
-                email.setCustomValidity('Aguarde a verificação do e-mail cadastrado.');
-                mensagem.textContent = 'Verificando e-mail cadastrado…';
-
-                try {
-                    const dados = await buscarProfessor(valor);
-
-                    if (consulta !== consultaAtual) {
-                        return;
-                    }
-
-                    email.setCustomValidity('');
-
-                    if (dados.professor === null) {
-                        mensagem.textContent = '';
-
-                        return;
-                    }
-
-                    professorId = String(dados.professor.id);
-                    nome.value = dados.professor.nome;
-                    nome.readOnly = true;
-                    seletorInstituicao.value = dados.professor.instituicao.id;
-                    seletorInstituicao.disabled = true;
-                    campoInstituicaoId.value = dados.professor.instituicao.id;
-                    campoInstituicaoNome.value = '';
-                    campoInstituicaoNome.disabled = true;
-                    campoInstituicaoNome.required = false;
-                    campoNovaInstituicao.hidden = true;
-                    mensagem.textContent = 'Professor cadastrado encontrado. Os dados foram bloqueados para edição.';
-                } catch (erro) {
-                    if (consulta !== consultaAtual) {
-                        return;
-                    }
-
-                    email.setCustomValidity('Não foi possível consultar o professor. Tente novamente.');
-                    mensagem.textContent = erro.message;
-                }
-            });
-
-            email.addEventListener('input', () => {
-                consultaAtual += 1;
-                email.setCustomValidity('');
-                mensagem.textContent = '';
-
-                if (professorId) {
-                    professorId = '';
-                    nome.value = '';
-                    nome.readOnly = false;
-                    seletorInstituicao.disabled = false;
-                    campoInstituicaoId.value = '';
-                    seletorInstituicao.value = '';
-                }
+                campoInstituicaoId.value = seletorInstituicao.value;
             });
 
             configurarSalvar(() => ({
                 tipo: 'professor',
-                id: professorId,
+                id: '',
                 nome: nome.value.trim(),
-                email: email.value.trim(),
                 instituicao: {
                     id: campoInstituicaoId.value,
-                    nome: campoInstituicaoNome.value.trim()
-                        || instituicoesPorId.get(campoInstituicaoId.value)?.nome
-                        || '',
+                    nome: instituicoesPorId.get(campoInstituicaoId.value)?.nome || '',
                 },
             }));
         };

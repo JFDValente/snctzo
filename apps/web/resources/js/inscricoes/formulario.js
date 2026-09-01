@@ -167,6 +167,7 @@ const iniciarFormulario = () => {
 
         const mensagem = etapa.querySelector('[data-participantes-mensagem]');
         mensagem.textContent = 'Inclua pelo menos um participante para continuar.';
+        mensagem.classList.add('mensagem-campo--erro');
 
         return false;
     };

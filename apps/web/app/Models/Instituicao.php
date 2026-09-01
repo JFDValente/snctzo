@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['nome', 'instagram', 'facebook', 'site', 'outros_links'])]
+#[Fillable(['nome'])]
 class Instituicao extends Model
 {
     protected $table = 'instituicoes';
