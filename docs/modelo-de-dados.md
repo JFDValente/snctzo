@@ -67,7 +67,7 @@ A comparação do nome ignora maiúsculas e acentos. O mesmo nome pode existir e
 | Coluna | Tipo | Nulável | Regra |
 |---|---|---:|---|
 | `id` | `BIGINT UNSIGNED` | não | chave primária |
-| `instituicao_id` | `BIGINT UNSIGNED` | não | chave estrangeira para `instituicoes.id` |
+| `instituicao_id` | `BIGINT UNSIGNED` | sim | chave estrangeira opcional para `instituicoes.id` |
 | `nome` | `VARCHAR(150)` | não | nome completo |
 | `email` | `VARCHAR(254)` | sim | único quando informado e armazenado em minúsculas |
 | `created_at` | `DATETIME` | não | gerenciado pelo Laravel |
@@ -80,12 +80,12 @@ O e-mail possui constraint `UNIQUE`, mas não é a chave primária. A busca púb
 | Coluna | Tipo | Nulável | Regra |
 |---|---|---:|---|
 | `id` | `BIGINT UNSIGNED` | não | chave primária |
-| `curso_id` | `BIGINT UNSIGNED` | não | chave estrangeira para `cursos.id` |
+| `curso_id` | `BIGINT UNSIGNED` | sim | chave estrangeira opcional para `cursos.id` |
 | `nome` | `VARCHAR(150)` | não | nome completo |
 | `created_at` | `DATETIME` | não | gerenciado pelo Laravel |
 | `updated_at` | `DATETIME` | não | gerenciado pelo Laravel |
 
-O aluno não possui matrícula nem outra chave forte. Não haverá constraint global de unicidade para nome e curso, pois pessoas diferentes podem compartilhar esses dados. A aplicação aceita o risco de registros duplicados entre inscrições.
+O aluno não possui matrícula, curso ou outra chave forte. Não haverá constraint global de unicidade por nome, pois pessoas diferentes podem compartilhar esses dados. A aplicação aceita o risco de registros duplicados entre inscrições.
 
 ### `atividades`
 
@@ -176,17 +176,16 @@ No formulário público, a instituição é apresentada com o rótulo **unidade 
 
 ### Aluno
 
-- Permitir a seleção de aluno pré-carregado da instituição.
-- Criar um registro quando o usuário informar um aluno novo e selecionar um curso fixo.
-- Não tentar deduplicação global automática por nome e curso.
+- Permitir a seleção de aluno pré-carregado da unidade acadêmica e de aluno sem curso informado.
+- Criar um registro quando o usuário informar um aluno novo, sem curso.
+- Não tentar deduplicação global automática por nome.
 
 ## 6. Regras de participação
 
 - A atividade deve possuir pelo menos um registro em `atividade_aluno` ou `atividade_professor`.
-- Alunos participantes devem pertencer à instituição do curso principal.
-- Professores participantes podem pertencer a outras instituições.
+- Alunos e professores participantes podem não ter curso ou unidade acadêmica informados.
 - O mesmo aluno ou professor não pode aparecer duas vezes na mesma atividade.
-- Para registros novos na mesma submissão, bloquear professores com e-mail repetido e alunos com a mesma combinação normalizada de nome e curso.
+- Para registros novos na mesma submissão, bloquear alunos e professores com o mesmo nome normalizado.
 
 ## 7. Transação de inscrição
 

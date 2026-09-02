@@ -132,6 +132,10 @@
     border-left-color: var(--cor-destaque);
 }
 
+.aviso--destaque p {
+    color: #b42318;
+}
+
 .aviso--sucesso h1 {
     max-width: none;
     margin-bottom: 1rem;
@@ -278,6 +282,10 @@
     height: 1.15rem;
     margin: 0;
     accent-color: var(--cor-primaria);
+}
+
+.participante-ficha [data-corpo-participante] {
+    margin-top: 1.5rem;
 }
 
 .participante-ficha__acoes {

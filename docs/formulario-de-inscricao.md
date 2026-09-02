@@ -159,38 +159,33 @@ Exigir uma caixa **Ciente**. O professor responsável poderá ser adicionado man
 
 Campos:
 
-- nome;
-- curso.
+- nome completo.
 
 Regras:
 
-- Os alunos participantes devem pertencer à mesma instituição da atividade.
-- Eles podem pertencer a cursos diferentes do curso principal.
-- O frontend pré-carrega os alunos e cursos da instituição para autocomplete.
-- Ao selecionar um aluno existente, nome e curso ficam bloqueados.
-- O usuário pode cadastrar um aluno novo, mas deve selecionar um curso existente da unidade acadêmica.
+- O frontend pré-carrega alunos já associados à unidade acadêmica e alunos sem curso para autocomplete.
+- Ao selecionar um aluno existente, o nome fica bloqueado.
+- Um aluno novo é criado sem curso informado.
 - O sistema permite duplicidade global de alunos porque não existe uma chave forte, como matrícula.
 
 #### Participante professor
 
 Campos:
 
-- nome completo;
-- unidade acadêmica.
+- nome completo.
 
 Regras:
 
-- O professor participante pode pertencer a outra instituição.
 - O e-mail não é solicitado para professor participante.
-- A unidade acadêmica deve ser selecionada no catálogo fixo.
+- Um professor participante novo é criado sem unidade acadêmica informada.
 
 #### Duplicidades dentro da atividade
 
 Bloquear:
 
 - o mesmo registro existente adicionado duas vezes;
-- dois professores novos com o mesmo e-mail;
-- dois alunos novos com o mesmo nome e curso, ignorando maiúsculas, acentos e espaços excedentes.
+- dois professores novos com o mesmo nome, ignorando maiúsculas, acentos e espaços excedentes;
+- dois alunos novos com o mesmo nome, ignorando maiúsculas, acentos e espaços excedentes.
 
 ### Resumo da atividade
 

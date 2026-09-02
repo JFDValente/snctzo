@@ -60,7 +60,7 @@ class CriarAtividade
                 foreach ($dados['participantes'] as $participante) {
                     if ($participante['tipo'] === 'aluno') {
                         $atividade->alunos()->syncWithoutDetaching([
-                            $this->resolverAluno($participante, $instituicao)->id,
+                            $this->resolverAluno($participante)->id,
                         ]);
 
                         continue;
@@ -147,47 +147,15 @@ class CriarAtividade
     /**
      * @param  array<string, mixed>  $dados
      */
-    private function resolverAluno(array $dados, Instituicao $instituicao): Aluno
+    private function resolverAluno(array $dados): Aluno
     {
         if (isset($dados['id'])) {
-            $aluno = Aluno::query()->with('curso')->findOrFail($dados['id']);
-
-            if ($aluno->curso->instituicao_id !== $instituicao->id) {
-                throw ValidationException::withMessages([
-                    'participantes' => 'O aluno não pertence à instituição selecionada.',
-                ]);
-            }
-
-            return $aluno;
+            return Aluno::query()->findOrFail($dados['id']);
         }
-
-        $curso = $this->resolverCursoDoAluno($dados['curso'], $instituicao);
 
         return Aluno::query()->create([
-            'curso_id' => $curso->id,
+            'curso_id' => null,
             'nome' => $dados['nome'],
-        ]);
-    }
-
-    /**
-     * @param  array<string, mixed>  $dados
-     */
-    private function resolverCursoDoAluno(array $dados, Instituicao $instituicao): Curso
-    {
-        if (isset($dados['id'])) {
-            $curso = Curso::query()->findOrFail($dados['id']);
-
-            if ($curso->instituicao_id !== $instituicao->id) {
-                throw ValidationException::withMessages([
-                    'participantes' => 'O curso do aluno não pertence à instituição selecionada.',
-                ]);
-            }
-
-            return $curso;
-        }
-
-        throw ValidationException::withMessages([
-            'participantes' => 'Selecione um curso cadastrado para o aluno.',
         ]);
     }
 
@@ -201,7 +169,7 @@ class CriarAtividade
         }
 
         return Professor::query()->create([
-            'instituicao_id' => $dados['instituicao']['id'],
+            'instituicao_id' => null,
             'nome' => $dados['nome'],
             'email' => null,
         ]);

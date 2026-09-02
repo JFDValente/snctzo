@@ -42,8 +42,6 @@ class StoreAtividadeRequest extends FormRequest
             'participantes.*.tipo' => ['required', Rule::in(['aluno', 'professor'])],
             'participantes.*.id' => ['nullable', 'integer'],
             'participantes.*.nome' => ['nullable', 'string', 'max:150'],
-            'participantes.*.curso.id' => ['nullable', 'integer', Rule::exists('cursos', 'id')],
-            'participantes.*.instituicao.id' => ['nullable', 'integer', Rule::exists('instituicoes', 'id')],
             'ciente_responsavel' => ['accepted'],
             'ciente_banner' => ['accepted'],
             'ciente_espaco_professor' => ['accepted'],
@@ -161,7 +159,6 @@ class StoreAtividadeRequest extends FormRequest
     private function validarParticipantes(Validator $validator): void
     {
         $texto = new NormalizadorDeTexto;
-        $instituicaoId = $this->integer('instituicao.id') ?: null;
         $vistos = [];
 
         foreach ($this->input('participantes', []) as $indice => $participante) {
@@ -169,7 +166,7 @@ class StoreAtividadeRequest extends FormRequest
             $id = isset($participante['id']) ? (int) $participante['id'] : null;
 
             if ($tipo === 'aluno') {
-                $this->validarAlunoParticipante($validator, $indice, $participante, $id, $instituicaoId, $texto, $vistos);
+                $this->validarAlunoParticipante($validator, $indice, $participante, $id, $texto, $vistos);
             }
 
             if ($tipo === 'professor') {
@@ -182,13 +179,13 @@ class StoreAtividadeRequest extends FormRequest
      * @param  array<string, mixed>  $participante
      * @param  array<string, bool>  $vistos
      */
-    private function validarAlunoParticipante(Validator $validator, int $indice, array $participante, ?int $id, ?int $instituicaoId, NormalizadorDeTexto $texto, array &$vistos): void
+    private function validarAlunoParticipante(Validator $validator, int $indice, array $participante, ?int $id, NormalizadorDeTexto $texto, array &$vistos): void
     {
         if ($id !== null) {
-            $aluno = Aluno::query()->with('curso')->find($id);
+            $aluno = Aluno::query()->find($id);
 
-            if ($aluno === null || (int) $aluno->curso->instituicao_id !== $instituicaoId) {
-                $validator->errors()->add("participantes.{$indice}.id", 'O aluno não pertence à instituição selecionada.');
+            if ($aluno === null) {
+                $validator->errors()->add("participantes.{$indice}.id", 'O aluno informado não existe.');
             }
 
             $this->registrarDuplicidade($validator, $vistos, "aluno:{$id}", $indice);
@@ -196,26 +193,15 @@ class StoreAtividadeRequest extends FormRequest
             return;
         }
 
-        $chaveCurso = $participante['curso']['id'] ?? null;
         $chaveNome = $texto->chaveDeComparacao($participante['nome'] ?? null);
 
-        if (isset($participante['curso']['id'])) {
-            $curso = Curso::query()->find((int) $participante['curso']['id']);
-
-            if ($curso === null || (int) $curso->instituicao_id !== $instituicaoId) {
-                $validator->errors()->add("participantes.{$indice}.curso.id", 'O curso do aluno não pertence à instituição selecionada.');
-            }
-        }
-
-        if ($chaveCurso === null || $chaveNome === null) {
-            $validator->errors()->add("participantes.{$indice}.nome", 'Informe o nome e o curso do aluno.');
+        if ($chaveNome === null) {
+            $validator->errors()->add("participantes.{$indice}.nome", 'Informe o nome completo do aluno.');
 
             return;
         }
 
-        $chave = "{$chaveNome}:{$chaveCurso}";
-
-        $this->registrarDuplicidade($validator, $vistos, "aluno-novo:{$chave}", $indice);
+        $this->registrarDuplicidade($validator, $vistos, "aluno-novo:{$chaveNome}", $indice);
     }
 
     /**
@@ -235,15 +221,13 @@ class StoreAtividadeRequest extends FormRequest
         }
 
         $nome = $texto->chaveDeComparacao($participante['nome'] ?? null);
-        $instituicaoId = data_get($participante, 'instituicao.id');
-
-        if ($nome === null || $instituicaoId === null) {
-            $validator->errors()->add("participantes.{$indice}.nome", 'Informe o nome e a unidade acadêmica do professor.');
+        if ($nome === null) {
+            $validator->errors()->add("participantes.{$indice}.nome", 'Informe o nome completo do professor.');
 
             return;
         }
 
-        $this->registrarDuplicidade($validator, $vistos, "professor-novo:{$nome}:{$instituicaoId}", $indice);
+        $this->registrarDuplicidade($validator, $vistos, "professor-novo:{$nome}", $indice);
     }
 
     /**

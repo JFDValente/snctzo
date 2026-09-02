@@ -6,6 +6,7 @@
 - Para adequar a primeira versão, a migration reinicia os dados operacionais, as unidades acadêmicas e os cursos.
 - Redes sociais e links pertencem à atividade, não à unidade acadêmica.
 - Professor participante pode não possuir e-mail; somente o professor responsável exige e-mail único.
+- Curso do aluno e unidade acadêmica do professor participante são opcionais e não são solicitados no formulário.
 
 ## 1. Produto e entregas
 

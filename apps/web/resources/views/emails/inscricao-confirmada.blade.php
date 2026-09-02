@@ -66,11 +66,11 @@
                 <h2 style="font-size: 20px;">Participantes</h2>
                 <ul>
                     @forelse ($atividade->alunos as $aluno)
-                        <li>Aluno: {{ $aluno->nome }} — {{ $aluno->curso->nome }}</li>
+                        <li>Aluno: {{ $aluno->nome }}@if ($aluno->curso) — {{ $aluno->curso->nome }}@endif</li>
                     @empty
                     @endforelse
                     @foreach ($atividade->professores as $professor)
-                        <li>Professor: {{ $professor->nome }} — {{ $professor->instituicao->nome }}</li>
+                        <li>Professor: {{ $professor->nome }}@if ($professor->instituicao) — {{ $professor->instituicao->nome }}@endif</li>
                     @endforeach
                 </ul>
 

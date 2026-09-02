@@ -27,7 +27,10 @@ class CatalogoInscricaoController extends Controller
 
         $alunos = Aluno::query()
             ->select(['id', 'curso_id', 'nome'])
-            ->whereIn('curso_id', $cursos->modelKeys())
+            ->where(function ($consulta) use ($cursos): void {
+                $consulta->whereIn('curso_id', $cursos->modelKeys())
+                    ->orWhereNull('curso_id');
+            })
             ->orderBy('nome')
             ->get();
 

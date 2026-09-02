@@ -9,7 +9,7 @@
     </div>
 
     <div class="aviso aviso--destaque">
-        <div><h2>Aviso importante</h2><p>Realização do Evento: É proibido o uso de banner durante o evento.</p></div>
+        <div><h2>Aviso importante</h2><p><strong>É proibido o uso de banner durante o evento.</strong></p></div>
     </div>
 
     <div class="texto-formulario">

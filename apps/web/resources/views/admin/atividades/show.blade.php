@@ -61,10 +61,10 @@
                             </thead>
                             <tbody>
                                 @foreach ($atividade->alunos as $aluno)
-                                    <tr><td>Aluno</td><td>{{ $aluno->nome }}</td><td>{{ $aluno->curso->nome }}</td></tr>
+                                    <tr><td>Aluno</td><td>{{ $aluno->nome }}</td><td>{{ $aluno->curso?->nome ?? 'Não informado' }}</td></tr>
                                 @endforeach
                                 @foreach ($atividade->professores as $professor)
-                                    <tr><td>Professor</td><td>{{ $professor->nome }}</td><td>{{ $professor->instituicao->nome }}</td></tr>
+                                    <tr><td>Professor</td><td>{{ $professor->nome }}</td><td>{{ $professor->instituicao?->nome ?? 'Não informada' }}</td></tr>
                                 @endforeach
                             </tbody>
                         </table>
