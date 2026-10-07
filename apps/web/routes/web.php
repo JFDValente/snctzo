@@ -46,6 +46,8 @@ Route::prefix('admin')
             Route::redirect('/', '/admin/atividades')->name('inicio');
             Route::post('logout', [AdminAutenticacaoController::class, 'destroy'])->name('logout');
             Route::get('atividades', [AdminAtividadeController::class, 'index'])->name('atividades.index');
+            Route::get('atividades/exportar', [AdminAtividadeController::class, 'exportar'])
+                ->name('atividades.exportar');
             Route::get('atividades/{atividade}', [AdminAtividadeController::class, 'show'])
                 ->whereNumber('atividade')
                 ->name('atividades.show');

@@ -67,6 +67,12 @@
     color: var(--cor-texto-suave);
 }
 
+.admin-pagina__acoes {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
 .admin-estado-vazio,
 .admin-cartao,
 .admin-tabela-container {
@@ -280,5 +286,10 @@
 
     .admin-detalhes {
         grid-template-columns: 1fr;
+    }
+
+    .admin-pagina__acoes .botao {
+        width: 100%;
+        text-align: center;
     }
 }

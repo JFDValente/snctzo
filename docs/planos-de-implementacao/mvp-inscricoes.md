@@ -6,9 +6,9 @@ Este documento organiza a implementação do MVP de inscrições em tarefas pequ
 
 O plano não substitui as especificações. Antes de executar uma tarefa, o agente deve consultar:
 
-1. [Formulário de inscrição](./formulario-de-inscricao.md) — conteúdo, navegação e comportamento do formulário;
-2. [Modelo de dados](./modelo-de-dados.md) — entidades, relacionamentos e constraints;
-3. [Decisões estruturais](./decisoes-estruturais.md) — stack, hospedagem, segurança e limites operacionais.
+1. [Formulário de inscrição](../formulario-de-inscricao.md) — conteúdo, navegação e comportamento do formulário;
+2. [Modelo de dados](../modelo-de-dados.md) — entidades, relacionamentos e constraints;
+3. [Decisões estruturais](../decisoes-estruturais.md) — stack, hospedagem, segurança e limites operacionais.
 
 Em caso de divergência:
 

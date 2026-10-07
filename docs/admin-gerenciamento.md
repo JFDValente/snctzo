@@ -2,7 +2,7 @@
 
 ## 1. Objetivo e escopo
 
-Este documento define a primeira entrega do gerenciamento autenticado da SNCTZO 2026. O módulo permitirá consultar as atividades submetidas pelo formulário público, sem alterar ou excluir dados.
+Este documento define a primeira entrega do gerenciamento autenticado da SNCTZO 2026. O módulo permitirá consultar e exportar as atividades submetidas pelo formulário público, sem alterar ou excluir dados.
 
 O módulo será servido no mesmo subdomínio da aplicação:
 
@@ -37,9 +37,10 @@ O escopo desta entrega é intencionalmente somente leitura. Edição, exclusão,
 | `POST` | `/admin/logout` | `admin.logout` | Encerra a sessão do usuário autenticado |
 | `GET` | `/admin` | `admin.inicio` | Redireciona para a listagem |
 | `GET` | `/admin/atividades` | `admin.atividades.index` | Lista atividades |
+| `GET` | `/admin/atividades/exportar` | `admin.atividades.exportar` | Baixa todas as atividades em CSV |
 | `GET` | `/admin/atividades/{atividade}` | `admin.atividades.show` | Mostra uma atividade |
 
-As três últimas rotas ficarão dentro do middleware `auth`. Visitantes que tentarem acessá-las serão redirecionados ao login.
+As quatro últimas rotas ficarão dentro do middleware `auth`. Visitantes que tentarem acessá-las serão redirecionados ao login.
 
 ### 3.2 Regras de segurança
 
@@ -79,6 +80,8 @@ A rota `/admin/atividades` apresentará uma tabela com uma linha por atividade e
 
 O nome da atividade, ou uma ação discreta “Visualizar”, levará para `/admin/atividades/{id}`.
 
+No topo da página, haverá o botão **Exportar CSV**, que inicia o download sem alterar a paginação nem os filtros futuros da lista.
+
 ### 5.2 Consulta e paginação
 
 - Ordenar por `atividades.created_at` em ordem crescente.
@@ -89,6 +92,40 @@ O nome da atividade, ou uma ação discreta “Visualizar”, levará para `/adm
 - Quando não houver inscrições, exibir estado vazio claro, sem tabela vazia.
 
 Não haverá filtros, busca, ordenação pela interface, edição ou exclusão nesta fase.
+
+### 5.3 Exportação CSV
+
+A rota `/admin/atividades/exportar` produzirá um arquivo CSV com todas as atividades cadastradas, independentemente da página atual da listagem. A ordenação seguirá `created_at` e `id`, ambos crescentes.
+
+O arquivo será enviado como resposta de download, sem arquivo temporário persistido no servidor, com:
+
+- codificação UTF-8 com BOM para abertura correta no Microsoft Excel;
+- separador `;`, compatível com planilhas configuradas em PT-BR;
+- nome no formato `atividades-snctzo-2026-AAAAMMDD-HHMM.csv`;
+- uma linha de cabeçalho e uma linha por atividade;
+- proteção contra injeção de fórmula em planilhas: valores iniciados por `=`, `+`, `-` ou `@` serão tratados como texto.
+
+As colunas da exportação serão:
+
+| Coluna | Conteúdo |
+|---|---|
+| Nome da atividade | nome submetido |
+| Unidade acadêmica | instituição do curso principal |
+| Curso principal | curso da atividade |
+| Data de inscrição | data e hora no formato `dd/mm/aaaa às HH:mm` |
+| Professor responsável | nome do responsável |
+| E-mail do responsável | e-mail do responsável |
+| Participação em 20/10 | `Sim` ou `Não` |
+| Participação em 21/10 | `Sim` ou `Não` |
+| Resumo | resumo submetido |
+| Observações | observações, quando existentes |
+| Instagram | valor informado, quando existente |
+| Facebook | valor informado, quando existente |
+| Site | valor informado, quando existente |
+| Outros links | valor informado, quando existente |
+| Participantes | lista consolidada em uma célula no formato `(tipo|nome)`, separada por `;` |
+
+Cada dado geral terá a própria coluna, incluindo professor responsável e e-mail do responsável. Os participantes não gerarão linhas adicionais: por exemplo, `(Aluno|Ana Souza); (Professor|Carlos Lima)`. Curso do aluno e unidade acadêmica do professor participante não serão exportados, pois essas associações são opcionais e podem não existir. Checkboxes individuais de aceite, token de submissão, identificadores internos e dados técnicos de envio de e-mail permanecem fora do arquivo.
 
 ## 6. Visualização da atividade
 
@@ -110,10 +147,10 @@ A rota `/admin/atividades/{id}` exibirá os dados compactamente, agrupados em bl
 
 Os participantes serão exibidos em tabela compacta, separando o tipo na própria coluna:
 
-| Tipo | Nome completo | Curso ou unidade acadêmica |
+| Tipo | Nome completo | Curso ou unidade acadêmica, quando informado |
 |---|---|---|
-| Aluno | nome do aluno | curso do aluno |
-| Professor | nome do professor | unidade acadêmica do professor |
+| Aluno | nome do aluno | curso do aluno, quando existente |
+| Professor | nome do professor | unidade acadêmica do professor, quando existente |
 
 O professor responsável será mostrado no bloco próprio. Ele não deve ser duplicado na tabela de participantes, exceto quando houver vínculo explícito em `atividade_professor`.
 
@@ -127,81 +164,15 @@ Não é necessária alteração estrutural no banco para este módulo. As tabela
 
 A criação do usuário inicial usará a tabela `users` existente. Se for criado um comando Artisan, ele não exigirá migration.
 
-## 8. Plano de implementação
+## 8. Plano técnico
 
-### [x] Fase A — Fundação de autenticação
-
-**Objetivo:** restringir o módulo administrativo a usuários autorizados.
-
-- Criar rotas, controller e views de login/logout.
-- Configurar redirecionamento de visitantes ao login.
-- Aplicar limitação de tentativas, CSRF e ciclo seguro de sessão.
-- Criar comando Artisan interativo para provisionar usuários administrativos.
-- Provisionar José (`jfdvalente@gmail.com`) em ambiente local e produção, com senha digitada diretamente no terminal.
-
-**Verificação manual:** login válido, login inválido, bloqueio temporário por repetição, acesso direto a rota protegida e logout.
-
-**Commit sugerido:** `feat(admin): Adiciona autenticação administrativa`
-
-### [x] Fase B — Layout e navegação
-
-**Objetivo:** estabelecer o shell visual do gerenciamento.
-
-- Criar layout administrativo responsivo.
-- Adicionar identificação do sistema, menu “Atividades”, nome do usuário e logout.
-- Criar redirecionamento de `/admin` para a listagem.
-
-**Verificação manual:** navegação em tela desktop e mobile; menu e logout acessíveis.
-
-**Commit sugerido:** `feat(admin): Cria layout do gerenciamento`
-
-### [x] Fase C — Listagem paginada
-
-**Objetivo:** consultar inscrições de forma eficiente e previsível.
-
-- Criar controller e view da lista.
-- Consultar atividades com curso e unidade acadêmica.
-- Ordenar por data de criação e identificador, ambos crescentes.
-- Paginar em 20 registros por página.
-- Criar estados de lista vazia e navegação de páginas.
-
-**Verificação manual:** nenhuma atividade, uma atividade, 20 atividades e mais de 20 atividades; confirmação da ordem ascendente.
-
-**Commit sugerido:** `feat(admin): Lista atividades cadastradas`
-
-### [x] Fase D — Detalhe da atividade
-
-**Objetivo:** permitir a consulta integral da submissão, sem os aceites.
-
-- Criar controller e view de detalhe.
-- Carregar dados gerais, responsável, curso, unidade acadêmica e participantes.
-- Apresentar links somente quando preenchidos.
-- Tratar identificador inexistente com página 404 padrão.
-- Adicionar navegação de retorno à listagem.
-
-**Verificação manual:** atividade com todos os campos, atividade sem observação/links, alunos, professores participantes e URL inexistente.
-
-**Commit sugerido:** `feat(admin): Exibe detalhes da atividade`
-
-### [~] Fase E — Qualidade e publicação
-
-**Objetivo:** validar e publicar sem afetar o formulário público.
-
-- Executar Pint nos arquivos PHP alterados.
-- Executar build de assets e caches do Laravel.
-- Validar manualmente autenticação, listagem, paginação, detalhe e logout.
-- Atualizar `docs/publicacao-hostinger.md` caso o processo ganhe o comando de criação de usuário.
-- Publicar uma tag de versão e executar o procedimento padrão de deploy.
-
-**Critério de aceite:** o formulário em `/inscricoes` permanece público e funcional; `/admin` e todas as rotas administrativas exigem sessão autenticada.
-
-As validações locais de sintaxe, Pint, build, cache, proteção de rota, login, listagem vazia, detalhe e logout foram executadas. A publicação em produção e a criação do usuário administrativo na Hostinger permanecem pendentes.
+O plano técnico e o status das fases do gerenciamento ficam em [Plano do gerenciamento administrativo](./planos-de-implementacao/gerenciamento-administrativo.md).
 
 ## 9. Fora do escopo desta entrega
 
 - Perfis, papéis e permissões;
 - criação, edição ou exclusão de atividades;
-- busca, filtros, exportação ou relatórios;
+- busca, filtros ou relatórios;
 - gestão de instituições, cursos, professores e alunos;
 - redefinição de senha por e-mail;
 - auditoria de acessos ou trilha de alterações;

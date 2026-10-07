@@ -10,6 +10,10 @@
             <p>As atividades estão ordenadas pela data de inscrição, da mais antiga para a mais recente.</p>
         </header>
 
+        <div class="admin-pagina__acoes">
+            <a class="botao" href="{{ route('admin.atividades.exportar') }}">Exportar CSV</a>
+        </div>
+
         @if ($atividades->isEmpty())
             <p class="admin-estado-vazio">Ainda não há atividades cadastradas.</p>
         @else
