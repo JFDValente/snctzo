@@ -26,4 +26,11 @@ return [
     'email' => [
         'confirmacao_ativa' => env('EMAIL_CONFIRMACAO_ATIVA', false),
     ],
+
+    'presencas' => [
+        'calendario' => [
+            '2026-10-20' => ['manha', 'tarde', 'noite'],
+            '2026-10-21' => ['manha', 'tarde'],
+        ],
+    ],
 ];
