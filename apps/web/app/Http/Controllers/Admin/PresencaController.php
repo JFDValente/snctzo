@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Presencas\AdicionarParticipanteTardio;
 use App\Actions\Presencas\ConfirmarPeriodoDePresenca;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdicionarParticipanteTardioRequest;
 use App\Http\Requests\Admin\ConfirmarPresencaRequest;
 use App\Models\Atividade;
 use App\Support\Presencas\CalendarioDePresencas;
@@ -113,5 +115,16 @@ class PresencaController extends Controller
             'confirmado_por' => $periodo?->confirmadoPor?->name,
             'confirmado_em' => $periodo?->confirmado_em?->format('d/m/Y \à\s H:i'),
         ]);
+    }
+
+    public function adicionarParticipante(AdicionarParticipanteTardioRequest $request, Atividade $atividade, AdicionarParticipanteTardio $adicionar): RedirectResponse
+    {
+        $adicionar($atividade, $request->input('tipo'), $request->input('nome'));
+
+        return to_route('admin.presencas.show', [
+            'atividade' => $atividade,
+            'data' => $request->input('data'),
+            'turno' => $request->input('turno'),
+        ])->with('sucesso', 'Participante tardio incluído com sucesso.');
     }
 }

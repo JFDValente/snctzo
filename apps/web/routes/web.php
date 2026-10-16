@@ -62,5 +62,8 @@ Route::prefix('admin')
             Route::get('presencas/{atividade}/situacao', [AdminPresencaController::class, 'situacao'])
                 ->whereNumber('atividade')
                 ->name('presencas.situacao');
+            Route::post('presencas/{atividade}/participantes', [AdminPresencaController::class, 'adicionarParticipante'])
+                ->whereNumber('atividade')
+                ->name('presencas.participantes.store');
         });
     });

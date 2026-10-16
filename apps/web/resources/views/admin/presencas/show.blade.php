@@ -24,6 +24,18 @@
             <p class="admin-estado-vazio">{{ $errors->first('participantes') }}</p>
         @endif
 
+        <form class="admin-formulario" action="{{ route('admin.presencas.participantes.store', $atividade) }}" method="POST">
+            @csrf
+            <input name="data" type="hidden" value="{{ $data }}">
+            <input name="turno" type="hidden" value="{{ $turno }}">
+            <label for="tipo">Novo participante tardio</label>
+            <select id="tipo" name="tipo"><option value="aluno">Aluno</option><option value="professor">Professor</option></select>
+            <label for="nome">Nome completo</label>
+            <input id="nome" name="nome" required value="{{ old('nome') }}">
+            @error('nome')<p>{{ $message }}</p>@enderror
+            <button class="botao" type="submit">Adicionar participante</button>
+        </form>
+
         <form action="{{ route('admin.presencas.confirmar', $atividade) }}" data-formulario-presenca data-situacao-url="{{ route('admin.presencas.situacao', ['atividade' => $atividade, 'data' => $data, 'turno' => $turno]) }}" data-versao="{{ $periodo?->updated_at?->toISOString() }}" method="POST">
             @csrf
             <input name="data" type="hidden" value="{{ $data }}">
