@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\ConfirmarPresencaRequest;
 use App\Models\Atividade;
 use App\Support\Presencas\CalendarioDePresencas;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -92,5 +93,25 @@ class PresencaController extends Controller
             'data' => $request->input('data'),
             'turno' => $request->input('turno'),
         ])->with('sucesso', 'Presença confirmada com sucesso.');
+    }
+
+    public function situacao(Request $request, Atividade $atividade, CalendarioDePresencas $calendario): JsonResponse
+    {
+        $data = $request->string('data')->toString();
+        $turno = $request->string('turno')->toString();
+
+        abort_unless($calendario->periodoExiste($data, $turno), 404);
+
+        $periodo = $atividade->periodosDePresenca()
+            ->with('confirmadoPor')
+            ->where('data', $data)
+            ->where('turno', $turno)
+            ->first();
+
+        return response()->json([
+            'versao' => $periodo?->updated_at?->toISOString(),
+            'confirmado_por' => $periodo?->confirmadoPor?->name,
+            'confirmado_em' => $periodo?->confirmado_em?->format('d/m/Y \à\s H:i'),
+        ]);
     }
 }
