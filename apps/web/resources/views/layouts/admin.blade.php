@@ -7,7 +7,7 @@
 
         <title>@yield('titulo', 'Gerenciamento') — SNCTZO 2026</title>
 
-        @vite(['resources/css/app.css', 'resources/css/admin.css'])
+        @vite(['resources/css/app.css', 'resources/css/admin.css', 'resources/js/app.js'])
     </head>
     <body class="admin">
         <a class="atalho-conteudo" href="#conteudo">Ir para o conteúdo</a>

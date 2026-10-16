@@ -24,14 +24,18 @@
             <p class="admin-estado-vazio">{{ $errors->first('participantes') }}</p>
         @endif
 
-        <form class="admin-formulario" action="{{ route('admin.presencas.participantes.store', $atividade) }}" method="POST">
+        <form class="admin-formulario admin-formulario--participante-tardio" action="{{ route('admin.presencas.participantes.store', $atividade) }}" method="POST">
             @csrf
             <input name="data" type="hidden" value="{{ $data }}">
             <input name="turno" type="hidden" value="{{ $turno }}">
-            <label for="tipo">Novo participante tardio</label>
-            <select id="tipo" name="tipo"><option value="aluno">Aluno</option><option value="professor">Professor</option></select>
-            <label for="nome">Nome completo</label>
-            <input id="nome" name="nome" required value="{{ old('nome') }}">
+            <div class="admin-campo">
+                <label for="tipo">Tipo</label>
+                <select id="tipo" name="tipo"><option value="aluno">Aluno</option><option value="professor">Professor</option></select>
+            </div>
+            <div class="admin-campo">
+                <label for="nome">Nome completo</label>
+                <input id="nome" name="nome" required value="{{ old('nome') }}">
+            </div>
             @error('nome')<p>{{ $message }}</p>@enderror
             <button class="botao" type="submit">Adicionar participante</button>
         </form>
@@ -41,47 +45,35 @@
             <input name="data" type="hidden" value="{{ $data }}">
             <input name="turno" type="hidden" value="{{ $turno }}">
 
-            <div class="admin-tabela-container">
-                <table class="admin-tabela">
-                    <thead>
-                        <tr>
-                            <th scope="col">Tipo</th>
-                            <th scope="col">Participante</th>
-                            <th scope="col">Situação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($atividade->alunos as $aluno)
-                            <tr>
-                                <td>Aluno</td>
-                                <td>{{ $aluno->nome }}</td>
-                                <td>
-                                    <select name="alunos[{{ $aluno->id }}]" aria-label="Presença de {{ $aluno->nome }}">
-                                        <option value="">Não registrado</option>
-                                        <option value="presente" @selected(old("alunos.{$aluno->id}", $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status) === 'presente')>Presente</option>
-                                        <option value="ausente" @selected(old("alunos.{$aluno->id}", $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status) === 'ausente')>Ausente</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        @endforeach
-                        @foreach ($atividade->professores as $professor)
-                            <tr>
-                                <td>Professor</td>
-                                <td>{{ $professor->nome }}</td>
-                                <td>
-                                    <select name="professores[{{ $professor->id }}]" aria-label="Presença de {{ $professor->nome }}">
-                                        <option value="">Não registrado</option>
-                                        <option value="presente" @selected(old("professores.{$professor->id}", $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status) === 'presente')>Presente</option>
-                                        <option value="ausente" @selected(old("professores.{$professor->id}", $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status) === 'ausente')>Ausente</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <div class="admin-presencas-lista">
+                @foreach ($atividade->alunos as $aluno)
+                    <article class="admin-presenca-item">
+                        <div>
+                            <strong>{{ $aluno->nome }}</strong>
+                            <span>Aluno{{ $aluno->pivot->cadastrado_tardiamente ? ' (cadastro tardio)' : '' }}</span>
+                        </div>
+                        <fieldset class="admin-situacao" data-situacao-presenca>
+                            <legend>Situação</legend>
+                            <label><input name="alunos[{{ $aluno->id }}]" type="radio" value="presente" required @checked(old("alunos.{$aluno->id}", $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status) === 'presente')> Presente</label>
+                            <label><input name="alunos[{{ $aluno->id }}]" type="radio" value="ausente" @checked(old("alunos.{$aluno->id}", $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status) === 'ausente')> Ausente</label>
+                        </fieldset>
+                    </article>
+                @endforeach
+                @foreach ($atividade->professores as $professor)
+                    <article class="admin-presenca-item">
+                        <div>
+                            <strong>{{ $professor->nome }}</strong>
+                            <span>Professor{{ $professor->pivot->cadastrado_tardiamente ? ' (cadastro tardio)' : '' }}</span>
+                        </div>
+                        <fieldset class="admin-situacao" data-situacao-presenca>
+                            <legend>Situação</legend>
+                            <label><input name="professores[{{ $professor->id }}]" type="radio" value="presente" required @checked(old("professores.{$professor->id}", $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status) === 'presente')> Presente</label>
+                            <label><input name="professores[{{ $professor->id }}]" type="radio" value="ausente" @checked(old("professores.{$professor->id}", $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status) === 'ausente')> Ausente</label>
+                        </fieldset>
+                    </article>
+                @endforeach
             </div>
 
-            <label><input name="confirmar" type="checkbox" value="1"> Confirmo o registro de presença deste turno.</label>
             <button class="botao" type="submit">Confirmar presença do turno</button>
         </form>
     </section>

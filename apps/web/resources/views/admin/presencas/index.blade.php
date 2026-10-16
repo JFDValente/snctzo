@@ -10,7 +10,7 @@
             <p>Selecione o dia e o turno antes de registrar a presença de uma atividade.</p>
         </header>
 
-        <form class="admin-formulario" action="{{ route('admin.presencas.index') }}" method="GET">
+        <form class="admin-formulario admin-formulario--filtros-presenca" action="{{ route('admin.presencas.index') }}" method="GET">
             <div class="campo">
                 <label for="data">Data</label>
                 <select id="data" name="data" onchange="this.form.submit()">
@@ -34,28 +34,36 @@
         @if ($atividades->isEmpty())
             <p class="admin-estado-vazio">Não há atividades agendadas para esta data.</p>
         @else
-            <div class="admin-tabela-container">
-                <table class="admin-tabela">
-                    <thead>
-                        <tr>
-                            <th scope="col">Atividade</th>
-                            <th scope="col">Unidade acadêmica</th>
-                            <th scope="col">Situação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($atividades as $atividade)
+            <section class="admin-busca-local" data-lista-atividades>
+                <div class="campo">
+                    <label for="buscar-atividade">Buscar atividade</label>
+                    <input id="buscar-atividade" data-busca-atividades type="search" placeholder="Digite parte do nome da atividade" autocomplete="off">
+                </div>
+                <p class="admin-busca-local__vazio" data-busca-atividades-vazio hidden>Nenhuma atividade encontrada.</p>
+
+                <div class="admin-tabela-container">
+                    <table class="admin-tabela">
+                        <thead>
                             <tr>
-                                <td>
-                                    <a href="{{ route('admin.presencas.show', ['atividade' => $atividade, 'data' => $data, 'turno' => $turno]) }}">{{ $atividade->nome }}</a>
-                                </td>
-                                <td>{{ $atividade->curso->instituicao->nome }}</td>
-                                <td>{{ $atividade->periodosDePresenca->isEmpty() ? 'Pendente' : 'Confirmado' }}</td>
+                                <th scope="col">Atividade</th>
+                                <th scope="col">Unidade acadêmica</th>
+                                <th scope="col">Situação</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @foreach ($atividades as $atividade)
+                                <tr data-atividade>
+                                    <td>
+                                        <a href="{{ route('admin.presencas.show', ['atividade' => $atividade, 'data' => $data, 'turno' => $turno]) }}">{{ $atividade->nome }}</a>
+                                    </td>
+                                    <td>{{ $atividade->curso->instituicao->nome }}</td>
+                                    <td>{{ $atividade->periodosDePresenca->isEmpty() ? 'Pendente' : 'Confirmado' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </section>
         @endif
     </section>
 @endsection

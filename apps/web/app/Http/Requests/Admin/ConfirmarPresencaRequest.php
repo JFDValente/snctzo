@@ -20,11 +20,10 @@ class ConfirmarPresencaRequest extends FormRequest
         return [
             'data' => ['required', 'date_format:Y-m-d'],
             'turno' => ['required', 'string', Rule::in(['manha', 'tarde', 'noite'])],
-            'confirmar' => ['accepted'],
             'alunos' => ['nullable', 'array'],
-            'alunos.*' => ['required', Rule::in(['presente', 'ausente'])],
+            'alunos.*' => [Rule::in(['presente', 'ausente'])],
             'professores' => ['nullable', 'array'],
-            'professores.*' => ['required', Rule::in(['presente', 'ausente'])],
+            'professores.*' => [Rule::in(['presente', 'ausente'])],
         ];
     }
 
@@ -34,8 +33,6 @@ class ConfirmarPresencaRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'confirmar.accepted' => 'Confirme o registro de presença antes de salvar.',
-            'required' => 'Informe a presença de todos os participantes.',
             'in' => 'Informe uma situação de presença válida.',
         ];
     }

@@ -261,6 +261,47 @@
     margin-top: 1.75rem;
 }
 
+.admin-formulario + .admin-tabela-container,
+.admin-formulario + .admin-estado-vazio {
+    margin-top: 1.5rem;
+}
+
+.admin-busca-local {
+    margin-top: 1.5rem;
+}
+
+.admin-busca-local .campo {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.admin-busca-local__vazio {
+    margin: 0;
+    color: var(--cor-texto-suave);
+}
+
+.admin-formulario--filtros-presenca {
+    grid-template-columns: repeat(2, minmax(0, 16rem));
+    align-items: end;
+}
+
+.admin-formulario--filtros-presenca .campo {
+    grid-column: auto;
+}
+
+.admin-campo { display: grid; gap: 0.35rem; }
+.admin-campo label { font-weight: 700; }
+.admin-campo input, .admin-campo select { width: 100%; min-height: 2.75rem; padding: 0.65rem 0.75rem; color: var(--cor-texto); background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: 0.4rem; font: inherit; }
+.admin-formulario--participante-tardio { grid-template-columns: minmax(10rem, 0.5fr) minmax(0, 1fr) auto; align-items: end; }
+.admin-presencas-lista { display: grid; gap: 0.75rem; }
+.admin-presenca-item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, 12rem); gap: 1rem; align-items: end; padding: 1rem; background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: 0.75rem; box-shadow: var(--sombra-suave); }
+.admin-presenca-item strong, .admin-presenca-item span { display: block; }
+.admin-presenca-item span { margin-top: 0.15rem; color: var(--cor-texto-suave); font-size: 0.85rem; }
+.admin-situacao { display: grid; grid-template-columns: repeat(2, max-content); gap: 0.35rem 0.75rem; margin: 0; padding: 0; border: 0; }
+.admin-situacao legend { grid-column: 1 / -1; margin-bottom: 0; font-weight: 700; }
+.admin-situacao label { display: inline-flex; gap: 0.35rem; align-items: center; cursor: pointer; }
+.admin-situacao input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--cor-primaria); }
+
 [data-formulario-presenca] {
     display: grid;
     gap: 1rem;
@@ -302,4 +343,13 @@
         width: 100%;
         text-align: center;
     }
+
+    .admin-formulario--participante-tardio,
+    .admin-presenca-item { grid-template-columns: 1fr; }
+
+    .admin-formulario--filtros-presenca {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .admin-situacao { gap: 1rem; }
 }
