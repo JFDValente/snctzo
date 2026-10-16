@@ -261,6 +261,16 @@
     margin-top: 1.75rem;
 }
 
+[data-formulario-presenca] {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+[data-formulario-presenca] select {
+    min-height: 2.75rem;
+}
+
 .botao--texto {
     padding: 0;
     color: inherit;

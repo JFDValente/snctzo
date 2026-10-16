@@ -21,6 +21,7 @@
                 <p class="admin__titulo">Gerenciamento</p>
                 <nav aria-label="Navegação administrativa">
                     <a class="admin__navegacao-link {{ request()->routeIs('admin.atividades.*') ? 'admin__navegacao-link--atual' : '' }}" href="{{ route('admin.atividades.index') }}">Atividades</a>
+                    <a class="admin__navegacao-link {{ request()->routeIs('admin.presencas.*') ? 'admin__navegacao-link--atual' : '' }}" href="{{ route('admin.presencas.index') }}">Controle de presença</a>
                 </nav>
                 <div class="admin__usuario">
                     <span>{{ auth()->user()->name }}</span>
