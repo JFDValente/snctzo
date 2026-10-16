@@ -52,11 +52,11 @@ class ConfirmarPeriodoDePresenca
             $periodo->presencasAlunos()->delete();
             $periodo->presencasProfessores()->delete();
 
-            foreach ($dados['alunos'] as $alunoId => $status) {
+            foreach ($dados['alunos'] ?? [] as $alunoId => $status) {
                 $periodo->presencasAlunos()->create(['aluno_id' => $alunoId, 'status' => $status]);
             }
 
-            foreach ($dados['professores'] as $professorId => $status) {
+            foreach ($dados['professores'] ?? [] as $professorId => $status) {
                 $periodo->presencasProfessores()->create(['professor_id' => $professorId, 'status' => $status]);
             }
 
@@ -69,8 +69,8 @@ class ConfirmarPeriodoDePresenca
     {
         $alunosEsperados = $atividade->alunos->pluck('id')->map(fn ($id) => (string) $id)->sort()->values()->all();
         $professoresEsperados = $atividade->professores->pluck('id')->map(fn ($id) => (string) $id)->sort()->values()->all();
-        $alunosInformados = collect(array_keys($dados['alunos']))->sort()->values()->all();
-        $professoresInformados = collect(array_keys($dados['professores']))->sort()->values()->all();
+        $alunosInformados = collect(array_keys($dados['alunos'] ?? []))->sort()->values()->all();
+        $professoresInformados = collect(array_keys($dados['professores'] ?? []))->sort()->values()->all();
 
         if ($alunosEsperados !== $alunosInformados || $professoresEsperados !== $professoresInformados) {
             throw ValidationException::withMessages(['participantes' => 'Informe a presença de todos os participantes da atividade.']);

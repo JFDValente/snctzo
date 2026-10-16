@@ -21,9 +21,9 @@ class ConfirmarPresencaRequest extends FormRequest
             'data' => ['required', 'date_format:Y-m-d'],
             'turno' => ['required', 'string', Rule::in(['manha', 'tarde', 'noite'])],
             'confirmar' => ['accepted'],
-            'alunos' => ['present', 'array'],
+            'alunos' => ['nullable', 'array'],
             'alunos.*' => ['required', Rule::in(['presente', 'ausente'])],
-            'professores' => ['present', 'array'],
+            'professores' => ['nullable', 'array'],
             'professores.*' => ['required', Rule::in(['presente', 'ausente'])],
         ];
     }
