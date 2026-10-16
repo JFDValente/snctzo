@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AtividadeController as AdminAtividadeController;
 use App\Http\Controllers\Admin\AutenticacaoController as AdminAutenticacaoController;
+use App\Http\Controllers\Admin\PresencaController as AdminPresencaController;
 use App\Http\Controllers\BuscarProfessorController;
 use App\Http\Controllers\CatalogoInscricaoController;
 use App\Http\Controllers\InscricaoController;
@@ -51,5 +52,9 @@ Route::prefix('admin')
             Route::get('atividades/{atividade}', [AdminAtividadeController::class, 'show'])
                 ->whereNumber('atividade')
                 ->name('atividades.show');
+            Route::get('presencas', [AdminPresencaController::class, 'index'])->name('presencas.index');
+            Route::get('presencas/{atividade}', [AdminPresencaController::class, 'show'])
+                ->whereNumber('atividade')
+                ->name('presencas.show');
         });
     });
