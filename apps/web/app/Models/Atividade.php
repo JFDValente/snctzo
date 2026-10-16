@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'token_submissao',
@@ -62,7 +63,8 @@ class Atividade extends Model
      */
     public function alunos(): BelongsToMany
     {
-        return $this->belongsToMany(Aluno::class, 'atividade_aluno');
+        return $this->belongsToMany(Aluno::class, 'atividade_aluno')
+            ->withPivot('cadastrado_tardiamente');
     }
 
     /**
@@ -70,6 +72,15 @@ class Atividade extends Model
      */
     public function professores(): BelongsToMany
     {
-        return $this->belongsToMany(Professor::class, 'atividade_professor');
+        return $this->belongsToMany(Professor::class, 'atividade_professor')
+            ->withPivot('cadastrado_tardiamente');
+    }
+
+    /**
+     * @return HasMany<PeriodoDePresenca, $this>
+     */
+    public function periodosDePresenca(): HasMany
+    {
+        return $this->hasMany(PeriodoDePresenca::class);
     }
 }

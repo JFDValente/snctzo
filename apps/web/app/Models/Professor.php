@@ -34,6 +34,15 @@ class Professor extends Model
      */
     public function atividades(): BelongsToMany
     {
-        return $this->belongsToMany(Atividade::class, 'atividade_professor');
+        return $this->belongsToMany(Atividade::class, 'atividade_professor')
+            ->withPivot('cadastrado_tardiamente');
+    }
+
+    /**
+     * @return HasMany<PresencaProfessor, $this>
+     */
+    public function presencas(): HasMany
+    {
+        return $this->hasMany(PresencaProfessor::class);
     }
 }
