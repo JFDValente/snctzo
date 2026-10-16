@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\Presencas\ConfirmarPeriodoDePresenca;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\ConfirmarPresencaRequest;
 use App\Models\Atividade;
 use App\Support\Presencas\CalendarioDePresencas;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PresencaController extends Controller
@@ -78,5 +81,16 @@ class PresencaController extends Controller
             'periodo',
             'turno',
         ));
+    }
+
+    public function confirmar(ConfirmarPresencaRequest $request, Atividade $atividade, ConfirmarPeriodoDePresenca $confirmar): RedirectResponse
+    {
+        $confirmar($atividade, $request->validated());
+
+        return to_route('admin.presencas.show', [
+            'atividade' => $atividade,
+            'data' => $request->input('data'),
+            'turno' => $request->input('turno'),
+        ])->with('sucesso', 'Presença confirmada com sucesso.');
     }
 }

@@ -56,5 +56,8 @@ Route::prefix('admin')
             Route::get('presencas/{atividade}', [AdminPresencaController::class, 'show'])
                 ->whereNumber('atividade')
                 ->name('presencas.show');
+            Route::post('presencas/{atividade}/confirmar', [AdminPresencaController::class, 'confirmar'])
+                ->whereNumber('atividade')
+                ->name('presencas.confirmar');
         });
     });
