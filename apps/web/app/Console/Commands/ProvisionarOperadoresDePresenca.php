@@ -11,13 +11,14 @@ class ProvisionarOperadoresDePresenca extends Command
 {
     protected $signature = 'presencas:provisionar-operadores';
 
-    protected $description = 'Cria ou atualiza os três operadores do controle de presença.';
+    protected $description = 'Cria ou atualiza os quatro operadores do controle de presença.';
 
     /** @var list<string> */
     private const USUARIOS = [
         'SNCTZO_01',
         'SNCTZO_02',
         'SNCTZO_03',
+        'SNCTZO_04',
     ];
 
     public function handle(): int
