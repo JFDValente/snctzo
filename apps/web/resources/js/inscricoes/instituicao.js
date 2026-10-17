@@ -51,7 +51,9 @@ const iniciarInstituicao = async () => {
         seletor.disabled = true;
 
         try {
-            const dados = await buscarJson(`/inscricoes/catalogo/instituicoes/${seletor.value}`);
+            const url = formulario.dataset.catalogoInstituicaoUrl
+                .replace('__INSTITUICAO__', encodeURIComponent(seletor.value));
+            const dados = await buscarJson(url);
             seletorCurso.replaceChildren(
                 criarOpcao('', 'Selecione o curso'),
                 ...dados.cursos.map((curso) => criarOpcao(curso.id, curso.nome)),
@@ -66,7 +68,7 @@ const iniciarInstituicao = async () => {
     });
 
     try {
-        const dados = await buscarJson('/inscricoes/catalogo/instituicoes');
+        const dados = await buscarJson(formulario.dataset.catalogoInstituicoesUrl);
         seletor.replaceChildren(
             criarOpcao('', 'Selecione a unidade acadêmica'),
             ...dados.instituicoes.map((instituicao) => criarOpcao(instituicao.id, instituicao.nome)),

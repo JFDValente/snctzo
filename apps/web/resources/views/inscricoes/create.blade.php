@@ -48,7 +48,16 @@
             <li class="progresso__etapa" data-progresso="5"><span>5</span> Condições</li>
         </ol>
 
-        <form id="formulario-inscricao" class="formulario" action="{{ route('inscricoes.store') }}" method="post" novalidate>
+        <form
+            id="formulario-inscricao"
+            class="formulario"
+            action="{{ route('inscricoes.store') }}"
+            data-catalogo-instituicao-url="{{ route('inscricoes.catalogo.instituicao', ['instituicao' => '__INSTITUICAO__']) }}"
+            data-catalogo-instituicoes-url="{{ route('inscricoes.catalogo.instituicoes') }}"
+            data-professores-busca-url="{{ route('inscricoes.professores.busca') }}"
+            method="post"
+            novalidate
+        >
             @csrf
             <input name="token_submissao" type="hidden" value="{{ \Illuminate\Support\Str::uuid() }}">
             <input type="text" class="campo-armadilha" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">

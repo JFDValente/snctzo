@@ -1,5 +1,5 @@
-const buscarProfessor = async (email) => {
-    const resposta = await fetch(`/inscricoes/professores/busca?email=${encodeURIComponent(email)}`, {
+const buscarProfessor = async (url, email) => {
+    const resposta = await fetch(`${url}?email=${encodeURIComponent(email)}`, {
         headers: { Accept: 'application/json' },
     });
 
@@ -22,8 +22,9 @@ const iniciarProfessorResponsavel = () => {
     const email = formulario?.querySelector('[data-professor-responsavel-email]');
     const nome = formulario?.querySelector('[data-professor-responsavel-nome]');
     const mensagem = formulario?.querySelector('[data-professor-responsavel-mensagem]');
+    const urlBusca = formulario?.dataset.professoresBuscaUrl;
 
-    if (!formulario || !email || !nome || !mensagem) {
+    if (!formulario || !email || !nome || !mensagem || !urlBusca) {
         return;
     }
 
@@ -91,7 +92,7 @@ const iniciarProfessorResponsavel = () => {
         mensagem.textContent = 'Verificando e-mail cadastrado…';
 
         try {
-            const dados = await buscarProfessor(valor);
+            const dados = await buscarProfessor(urlBusca, valor);
 
             if (consulta !== consultaAtual) {
                 return;
