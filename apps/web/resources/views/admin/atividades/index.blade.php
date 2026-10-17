@@ -12,6 +12,7 @@
 
         <div class="admin-pagina__acoes">
             <a class="botao" href="{{ route('admin.atividades.exportar') }}">Exportar CSV</a>
+            <a class="botao botao--secundario" href="{{ route('admin.atividades.presencas.exportar') }}">Exportar relatório de presença</a>
         </div>
 
         @if ($atividades->isEmpty())

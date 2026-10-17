@@ -59,6 +59,9 @@ Route::prefix('admin')
             Route::get('atividades/exportar', [AdminAtividadeController::class, 'exportar'])
                 ->middleware('acesso.modulo:atividades')
                 ->name('atividades.exportar');
+            Route::get('atividades/exportar-presencas', [AdminAtividadeController::class, 'exportarPresencas'])
+                ->middleware('acesso.modulo:atividades')
+                ->name('atividades.presencas.exportar');
             Route::get('atividades/{atividade}', [AdminAtividadeController::class, 'show'])
                 ->whereNumber('atividade')
                 ->middleware('acesso.modulo:atividades')

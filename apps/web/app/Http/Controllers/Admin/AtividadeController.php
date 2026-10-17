@@ -4,7 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Atividade;
+use App\Models\PeriodoDePresenca;
+use App\Support\Presencas\CalendarioDePresencas;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AtividadeController extends Controller
@@ -61,7 +65,7 @@ class AtividadeController extends Controller
                 'Site',
                 'Outros links',
                 'Participantes',
-            ], ';');
+            ], ';', '"', '');
 
             Atividade::query()
                 ->with([
@@ -74,7 +78,58 @@ class AtividadeController extends Controller
                 ->orderBy('id')
                 ->chunk(100, function ($atividades) use ($arquivo): void {
                     foreach ($atividades as $atividade) {
-                        fputcsv($arquivo, $this->linhaDaExportacao($atividade), ';');
+                        fputcsv($arquivo, $this->linhaDaExportacao($atividade), ';', '"', '');
+                    }
+                });
+
+            fclose($arquivo);
+        }, $nomeDoArquivo, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
+    }
+
+    public function exportarPresencas(CalendarioDePresencas $calendario): StreamedResponse
+    {
+        $nomeDoArquivo = 'presencas-snctzo-2026-'.now()->format('Ymd-Hi').'.csv';
+
+        return response()->streamDownload(function () use ($calendario): void {
+            $arquivo = fopen('php://output', 'w');
+
+            if ($arquivo === false) {
+                return;
+            }
+
+            fwrite($arquivo, "\xEF\xBB\xBF");
+
+            fputcsv($arquivo, [
+                'Atividade',
+                'Professor responsável',
+                'Unidade acadêmica',
+                'Curso principal',
+                'Data',
+                'Turno',
+                'Tipo',
+                'Participante',
+                'Status',
+                'Participante adicionado',
+                'Confirmado em',
+                'Confirmado por',
+            ], ';', '"', '');
+
+            Atividade::query()
+                ->with([
+                    'curso.instituicao',
+                    'professorResponsavel',
+                    'alunos',
+                    'professores',
+                    'periodosDePresenca' => fn ($consulta) => $consulta
+                        ->with(['confirmadoPor', 'presencasAlunos', 'presencasProfessores']),
+                ])
+                ->orderBy('nome')
+                ->orderBy('id')
+                ->chunk(100, function ($atividades) use ($arquivo, $calendario): void {
+                    foreach ($atividades as $atividade) {
+                        $this->exportarLinhasDePresenca($arquivo, $atividade, $calendario);
                     }
                 });
 
@@ -120,6 +175,92 @@ class AtividadeController extends Controller
             fn (mixed $valor): string => $this->protegerCelulaCsv($valor),
             $valores,
         );
+    }
+
+    /** @param resource $arquivo */
+    private function exportarLinhasDePresenca($arquivo, Atividade $atividade, CalendarioDePresencas $calendario): void
+    {
+        foreach ($calendario->opcoesDeData() as $opcaoDeData) {
+            $data = $opcaoDeData['valor'];
+
+            if (! $this->atividadeParticipaDaData($atividade, $data)) {
+                continue;
+            }
+
+            foreach ($calendario->turnosDaData($data) as $turno) {
+                $periodo = $atividade->periodosDePresenca
+                    ->first(fn (PeriodoDePresenca $item) => $item->data->toDateString() === $data && $item->turno === $turno);
+
+                $participantes = $atividade->alunos
+                    ->map(fn ($aluno) => ['tipo' => 'Aluno', 'participante' => $aluno])
+                    ->concat($atividade->professores->map(fn ($professor) => ['tipo' => 'Professor', 'participante' => $professor]))
+                    ->sortBy(fn (array $item) => mb_strtolower(Str::ascii($item['participante']->nome)))
+                    ->values();
+
+                foreach ($participantes as $item) {
+                    $participante = $item['participante'];
+                    $status = $item['tipo'] === 'Aluno'
+                        ? $periodo?->presencasAlunos->firstWhere('aluno_id', $participante->id)?->status
+                        : $periodo?->presencasProfessores->firstWhere('professor_id', $participante->id)?->status;
+
+                    fputcsv($arquivo, $this->linhaDaExportacaoDePresenca(
+                        $atividade,
+                        $data,
+                        $turno,
+                        $item['tipo'],
+                        $participante,
+                        $status,
+                        $periodo,
+                        (bool) $participante->pivot->cadastrado_tardiamente,
+                        $calendario,
+                    ), ';', '"', '');
+                }
+            }
+        }
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function linhaDaExportacaoDePresenca(
+        Atividade $atividade,
+        string $data,
+        string $turno,
+        string $tipo,
+        mixed $participante,
+        ?string $status,
+        ?PeriodoDePresenca $periodo,
+        bool $participanteAdicionado,
+        CalendarioDePresencas $calendario,
+    ): array {
+        $valores = [
+            $atividade->nome,
+            $atividade->professorResponsavel->nome,
+            $atividade->curso->instituicao->nome,
+            $atividade->curso->nome,
+            CarbonImmutable::parse($data)->format('d/m/Y'),
+            $calendario->rotuloDoTurno($turno),
+            $tipo,
+            $participante->nome,
+            $status === null ? 'Não registrado' : ucfirst($status),
+            $participanteAdicionado ? 'Sim' : 'Não',
+            $periodo?->confirmado_em?->format('d/m/Y \à\s H:i'),
+            $periodo?->confirmadoPor?->name,
+        ];
+
+        return array_map(
+            fn (mixed $valor): string => $this->protegerCelulaCsv($valor),
+            $valores,
+        );
+    }
+
+    private function atividadeParticipaDaData(Atividade $atividade, string $data): bool
+    {
+        return match ($data) {
+            '2026-10-20' => $atividade->participa_dia_20,
+            '2026-10-21' => $atividade->participa_dia_21,
+            default => false,
+        };
     }
 
     private function protegerCelulaCsv(mixed $valor): string
