@@ -178,3 +178,8 @@ O plano técnico e o status das fases do gerenciamento ficam em [Plano do gerenc
 - auditoria de acessos ou trilha de alterações;
 - dashboard com indicadores;
 - módulo de presença offline.
+
+## 10. Revisões posteriores
+
+As decisões que ampliam presença, exportações, ordenação e controle de acesso
+ao formulário público estão em [Revisão 2 dos módulos administrativos](./revisao-2-modulos-administrativos.md).
