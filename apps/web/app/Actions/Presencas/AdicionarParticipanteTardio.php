@@ -6,11 +6,12 @@ use App\Models\Aluno;
 use App\Models\Atividade;
 use App\Models\Professor;
 use App\Support\Normalizacao\NormalizadorDeTexto;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 
 class AdicionarParticipanteTardio
 {
-    public function __invoke(Atividade $atividade, string $tipo, string $nome): void
+    public function __invoke(Atividade $atividade, string $tipo, string $nome): Model
     {
         $normalizador = new NormalizadorDeTexto;
         $nome = $normalizador->normalizar($nome);
@@ -27,5 +28,7 @@ class AdicionarParticipanteTardio
             : Professor::query()->create(['instituicao_id' => null, 'nome' => $nome, 'email' => null]);
 
         $atividade->{$relacao}()->attach($pessoa->id, ['cadastrado_tardiamente' => true]);
+
+        return $pessoa;
     }
 }

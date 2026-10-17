@@ -118,14 +118,25 @@ class PresencaController extends Controller
         ]);
     }
 
-    public function adicionarParticipante(AdicionarParticipanteTardioRequest $request, Atividade $atividade, AdicionarParticipanteTardio $adicionar): RedirectResponse
+    public function adicionarParticipante(AdicionarParticipanteTardioRequest $request, Atividade $atividade, AdicionarParticipanteTardio $adicionar): JsonResponse|RedirectResponse
     {
-        $adicionar($atividade, $request->input('tipo'), $request->input('nome'));
+        $tipo = $request->string('tipo')->toString();
+        $participante = $adicionar($atividade, $tipo, $request->string('nome')->toString());
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'html' => view('admin.presencas.partials.cartao-participante', [
+                    'participante' => $participante,
+                    'status' => null,
+                    'tipo' => $tipo,
+                ])->render(),
+            ], 201);
+        }
 
         return to_route('admin.presencas.show', [
             'atividade' => $atividade,
             'data' => $request->input('data'),
             'turno' => $request->input('turno'),
-        ])->with('sucesso', 'Participante tardio incluído com sucesso.');
+        ])->with('sucessoParticipante', 'Participante tardio incluído com sucesso.');
     }
 }
