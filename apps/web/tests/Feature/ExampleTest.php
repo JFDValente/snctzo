@@ -16,4 +16,13 @@ class ExampleTest extends TestCase
 
         $response->assertRedirect('/inscricoes');
     }
+
+    public function test_a_rota_publica_antiga_informa_o_encerramento_das_inscricoes(): void
+    {
+        $this->get('/inscricoes')
+            ->assertOk()
+            ->assertSee('O prazo de inscrições já foi encerrado');
+
+        $this->post('/inscricoes')->assertStatus(405);
+    }
 }
