@@ -10,15 +10,15 @@
         </a>
 
         <h1 id="titulo-login">Gerenciamento</h1>
-        <p>Acesse com seu e-mail e senha autorizados.</p>
+        <p>Acesse com seu e-mail ou usuário e senha autorizados.</p>
 
         <form class="admin-formulario" action="{{ route('admin.login.autenticar') }}" method="POST">
             @csrf
 
             <div class="campo">
-                <label for="email">E-mail</label>
-                <input id="email" name="email" type="email" value="{{ old('email') }}" autocomplete="email" required autofocus>
-                @error('email')
+                <label for="identificador">E-mail ou usuário</label>
+                <input id="identificador" name="identificador" type="text" value="{{ old('identificador') }}" autocomplete="username" required autofocus>
+                @error('identificador')
                     <p class="mensagem-campo mensagem-campo--erro">{{ $message }}</p>
                 @enderror
             </div>

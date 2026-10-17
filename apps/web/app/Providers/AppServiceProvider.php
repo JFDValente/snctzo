@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             ->response($this->respostaLimite()));
 
         RateLimiter::for('login-admin', fn (Request $request) => Limit::perMinute(5)
-            ->by($request->ip().'|'.Str::lower((string) $request->input('email')))
+            ->by($request->ip().'|'.Str::lower((string) $request->input('identificador')))
             ->response($this->respostaLimiteLogin()));
     }
 
@@ -56,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
     private function respostaLimiteLogin(): \Closure
     {
         return fn (Request $request, array $cabecalhos) => back()
-            ->withErrors(['email' => 'Muitas tentativas. Aguarde um minuto e tente novamente.'])
-            ->onlyInput('email');
+            ->withErrors(['identificador' => 'Muitas tentativas. Aguarde um minuto e tente novamente.'])
+            ->onlyInput('identificador');
     }
 }

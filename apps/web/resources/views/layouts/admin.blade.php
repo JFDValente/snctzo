@@ -14,13 +14,15 @@
 
         <header class="admin__cabecalho">
             <div class="conteiner admin__cabecalho-conteudo">
-                <a class="marca" href="{{ route('admin.atividades.index') }}">
+                <a class="marca" href="{{ route('admin.inicio') }}">
                     <span class="marca__sigla">SNCTZO</span>
                     <span class="marca__ano">2026</span>
                 </a>
                 <p class="admin__titulo">Gerenciamento</p>
                 <nav aria-label="Navegação administrativa">
-                    <a class="admin__navegacao-link {{ request()->routeIs('admin.atividades.*') ? 'admin__navegacao-link--atual' : '' }}" href="{{ route('admin.atividades.index') }}">Atividades</a>
+                    @if (auth()->user()->podeAcessarModulo('atividades'))
+                        <a class="admin__navegacao-link {{ request()->routeIs('admin.atividades.*') ? 'admin__navegacao-link--atual' : '' }}" href="{{ route('admin.atividades.index') }}">Atividades</a>
+                    @endif
                     <a class="admin__navegacao-link {{ request()->routeIs('admin.presencas.*') ? 'admin__navegacao-link--atual' : '' }}" href="{{ route('admin.presencas.index') }}">Controle de presença</a>
                 </nav>
                 <div class="admin__usuario">

@@ -18,7 +18,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email:filter', 'max:254'],
+            'identificador' => ['required', 'string', 'max:254'],
             'password' => ['required', 'string'],
         ];
     }
@@ -26,7 +26,7 @@ class LoginRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'email' => Str::lower(trim((string) $this->input('email'))),
+            'identificador' => Str::lower(trim((string) $this->input('identificador'))),
         ]);
     }
 }
