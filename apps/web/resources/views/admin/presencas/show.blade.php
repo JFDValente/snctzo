@@ -3,12 +3,13 @@
 @section('titulo', 'Registrar presença')
 
 @section('conteudo')
-    <section class="conteiner admin-pagina" aria-labelledby="titulo-presenca">
+    <section class="conteiner admin-pagina admin-pagina--registro-presenca" aria-labelledby="titulo-presenca">
         <a class="admin-voltar" href="{{ route('admin.presencas.index', ['data' => $data, 'turno' => $turno]) }}">← Voltar às atividades</a>
 
         <header class="admin-pagina__cabecalho">
             <p class="admin-periodo">
                 <span>Data: {{ \Carbon\CarbonImmutable::parse($data)->format('d/m/Y') }}</span>
+                <span aria-hidden="true"> - </span>
                 <span>Turno: {{ $calendario->rotuloDoTurno($turno) }}</span>
             </p>
             <h1 id="titulo-presenca">{{ $atividade->nome }}</h1>
