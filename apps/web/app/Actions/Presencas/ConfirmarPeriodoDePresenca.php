@@ -24,6 +24,7 @@ class ConfirmarPeriodoDePresenca
         }
 
         $atividade->load(['alunos', 'professores']);
+        $dados = $this->completarAusencias($atividade, $dados);
         $this->validarParticipantes($atividade, $dados);
 
         return DB::transaction(function () use ($atividade, $dados, $data, $turno): PeriodoDePresenca {
@@ -62,6 +63,25 @@ class ConfirmarPeriodoDePresenca
 
             return $periodo;
         });
+    }
+
+    /** @param array<string, mixed> $dados
+     * @return array<string, mixed>
+     */
+    private function completarAusencias(Atividade $atividade, array $dados): array
+    {
+        $dados['alunos'] = $dados['alunos'] ?? [];
+        $dados['professores'] = $dados['professores'] ?? [];
+
+        foreach ($atividade->alunos as $aluno) {
+            $dados['alunos'][$aluno->id] ??= 'ausente';
+        }
+
+        foreach ($atividade->professores as $professor) {
+            $dados['professores'][$professor->id] ??= 'ausente';
+        }
+
+        return $dados;
     }
 
     /** @param array<string, mixed> $dados */
