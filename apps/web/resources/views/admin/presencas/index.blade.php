@@ -36,8 +36,8 @@
         @else
             <section class="admin-busca-local" data-lista-atividades>
                 <div class="campo">
-                    <label for="buscar-atividade">Buscar atividade</label>
-                    <input id="buscar-atividade" data-busca-atividades type="search" placeholder="Digite parte do nome da atividade" autocomplete="off">
+                    <label for="buscar-atividade">Buscar professor responsável</label>
+                    <input id="buscar-atividade" data-busca-atividades type="search" placeholder="Digite parte do nome do professor" autocomplete="off">
                 </div>
                 <p class="admin-busca-local__vazio" data-busca-atividades-vazio hidden>Nenhuma atividade encontrada.</p>
 
@@ -46,17 +46,17 @@
                         <thead>
                             <tr>
                                 <th scope="col">Atividade</th>
-                                <th scope="col">Unidade acadêmica</th>
+                                <th scope="col">Professor responsável</th>
                                 <th scope="col">Situação</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($atividades as $atividade)
-                                <tr data-atividade>
+                                <tr data-atividade data-professor-responsavel="{{ $atividade->professorResponsavel?->nome }}">
                                     <td>
                                         <a href="{{ route('admin.presencas.show', ['atividade' => $atividade, 'data' => $data, 'turno' => $turno]) }}">{{ $atividade->nome }}</a>
                                     </td>
-                                    <td>{{ $atividade->curso->instituicao->nome }}</td>
+                                    <td>{{ $atividade->professorResponsavel?->nome ?? 'Não informado' }}</td>
                                     <td>{{ $atividade->periodosDePresenca->isEmpty() ? 'Pendente' : 'Confirmado' }}</td>
                                 </tr>
                             @endforeach

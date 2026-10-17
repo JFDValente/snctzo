@@ -33,12 +33,13 @@ class PresencaController extends Controller
         $atividades = Atividade::query()
             ->with([
                 'curso.instituicao',
+                'professorResponsavel',
                 'periodosDePresenca' => fn ($consulta) => $consulta
                     ->where('data', $data)
                     ->where('turno', $turno),
             ])
             ->where($colunaDoDia, true)
-            ->orderBy('created_at')
+            ->orderBy('nome')
             ->orderBy('id')
             ->get();
 

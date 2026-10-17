@@ -14,8 +14,8 @@ document.querySelectorAll('[data-lista-atividades]').forEach((lista) => {
         let encontradas = 0;
 
         atividades.forEach((atividade) => {
-            const nome = normalizar(atividade.querySelector('a').textContent);
-            const corresponde = nome.includes(termo);
+            const professorResponsavel = normalizar(atividade.dataset.professorResponsavel ?? '');
+            const corresponde = professorResponsavel.includes(termo);
 
             atividade.hidden = !corresponde;
             encontradas += Number(corresponde);
