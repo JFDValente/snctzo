@@ -17,7 +17,7 @@ class AtividadeController extends Controller
     {
         $atividades = Atividade::query()
             ->with(['curso.instituicao'])
-            ->orderBy('created_at')
+            ->orderBy('nome')
             ->orderBy('id')
             ->paginate(20);
 

@@ -7,7 +7,7 @@
         <header class="admin-pagina__cabecalho">
             <p class="rotulo">Inscrições recebidas</p>
             <h1 id="titulo-atividades">Atividades</h1>
-            <p>As atividades estão ordenadas pela data de inscrição, da mais antiga para a mais recente.</p>
+            <p>As atividades estão ordenadas alfabeticamente pelo nome.</p>
         </header>
 
         <div class="admin-pagina__acoes">
