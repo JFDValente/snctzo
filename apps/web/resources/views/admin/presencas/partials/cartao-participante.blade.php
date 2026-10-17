@@ -1,4 +1,4 @@
-<article class="admin-presenca-item">
+<article class="admin-presenca-item" data-nome-participante="{{ $participante->nome }}">
     <div>
         <strong>{{ $participante->nome }}</strong>
         <span>{{ ucfirst($tipo) }}{{ $participante->pivot?->cadastrado_tardiamente ? ' (cadastro tardio)' : '' }}</span>

@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PresencaController extends Controller
 {
@@ -68,8 +69,8 @@ class PresencaController extends Controller
         abort_unless($atividade->{$colunaDoDia}, 404);
 
         $atividade->load([
-            'alunos',
-            'professores',
+            'alunos' => fn ($consulta) => $consulta->orderBy('nome')->orderBy('id'),
+            'professores' => fn ($consulta) => $consulta->orderBy('nome')->orderBy('id'),
             'periodosDePresenca' => fn ($consulta) => $consulta
                 ->with(['confirmadoPor', 'presencasAlunos', 'presencasProfessores'])
                 ->where('data', $data)
@@ -77,12 +78,26 @@ class PresencaController extends Controller
         ]);
 
         $periodo = $atividade->periodosDePresenca->first();
+        $participantes = $atividade->alunos
+            ->map(fn ($aluno) => [
+                'participante' => $aluno,
+                'status' => $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status,
+                'tipo' => 'aluno',
+            ])
+            ->concat($atividade->professores->map(fn ($professor) => [
+                'participante' => $professor,
+                'status' => $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status,
+                'tipo' => 'professor',
+            ]))
+            ->sortBy(fn (array $item) => mb_strtolower(Str::ascii($item['participante']->nome)))
+            ->values();
 
         return view('admin.presencas.show', compact(
             'atividade',
             'calendario',
             'data',
             'periodo',
+            'participantes',
             'turno',
         ));
     }

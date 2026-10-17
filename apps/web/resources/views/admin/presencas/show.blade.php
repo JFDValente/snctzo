@@ -28,20 +28,12 @@
             <input name="turno" type="hidden" value="{{ $turno }}">
 
             <div class="admin-presencas-lista">
-                @foreach ($atividade->alunos as $aluno)
+                @foreach ($participantes as $item)
                     @include('admin.presencas.partials.cartao-participante', [
-                        'participante' => $aluno,
-                        'status' => $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status,
+                        'participante' => $item['participante'],
+                        'status' => $item['status'],
                         'temErroDeParticipantes' => $temErroDeParticipantes,
-                        'tipo' => 'aluno',
-                    ])
-                @endforeach
-                @foreach ($atividade->professores as $professor)
-                    @include('admin.presencas.partials.cartao-participante', [
-                        'participante' => $professor,
-                        'status' => $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status,
-                        'temErroDeParticipantes' => $temErroDeParticipantes,
-                        'tipo' => 'professor',
+                        'tipo' => $item['tipo'],
                     ])
                 @endforeach
             </div>

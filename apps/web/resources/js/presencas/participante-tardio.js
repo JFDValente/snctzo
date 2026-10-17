@@ -39,6 +39,13 @@ document.querySelectorAll('[data-dialogo-participante-tardio]').forEach((dialogo
         const dados = await resposta.json();
         lista.insertAdjacentHTML('beforeend', dados.html);
         inicializarSituacoesDePresenca(lista.lastElementChild);
+        [...lista.children]
+            .sort((primeiro, segundo) => primeiro.dataset.nomeParticipante.localeCompare(
+                segundo.dataset.nomeParticipante,
+                'pt-BR',
+                { sensitivity: 'base' },
+            ))
+            .forEach((participante) => lista.append(participante));
         formulario.reset();
         dialogo.close();
     });
