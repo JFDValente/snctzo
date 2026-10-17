@@ -298,6 +298,8 @@
 .admin-dialogo::backdrop { background: rgb(0 0 0 / 55%); }
 .admin-dialogo__cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .admin-dialogo__cabecalho h2 { margin: 0; font-size: 1.2rem; }
+.admin-dialogo > h2 { margin-top: 0; font-size: 1.2rem; }
+.admin-dialogo__mensagem { margin-bottom: 1.25rem; }
 .admin-erro-formulario { grid-column: 1 / -1; margin: 0; color: var(--cor-erro); font-weight: 700; }
 .admin-presencas-lista { display: grid; gap: 0.75rem; }
 .admin-presenca-item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, 12rem); gap: 1rem; align-items: end; padding: 1rem; background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: 0.75rem; box-shadow: var(--sombra-suave); }
@@ -307,6 +309,7 @@
 .admin-situacao legend { grid-column: 1 / -1; margin-bottom: 0; font-weight: 700; }
 .admin-situacao label { display: inline-flex; gap: 0.35rem; align-items: center; cursor: pointer; }
 .admin-situacao input { width: 1.1rem; height: 1.1rem; margin: 0; accent-color: var(--cor-primaria); }
+.admin-situacao--erro { padding: 0.5rem; outline: 2px solid var(--cor-erro); border-radius: 0.4rem; }
 
 [data-formulario-presenca] {
     display: grid;

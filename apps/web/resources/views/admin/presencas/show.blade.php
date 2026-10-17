@@ -16,6 +16,8 @@
             @endif
         </header>
 
+        @php($temErroDeParticipantes = $errors->has('participantes'))
+
         @if (session('sucessoParticipante'))
             <p class="admin-estado-vazio">{{ session('sucessoParticipante') }}</p>
         @endif
@@ -30,6 +32,7 @@
                     @include('admin.presencas.partials.cartao-participante', [
                         'participante' => $aluno,
                         'status' => $periodo?->presencasAlunos->firstWhere('aluno_id', $aluno->id)?->status,
+                        'temErroDeParticipantes' => $temErroDeParticipantes,
                         'tipo' => 'aluno',
                     ])
                 @endforeach
@@ -37,6 +40,7 @@
                     @include('admin.presencas.partials.cartao-participante', [
                         'participante' => $professor,
                         'status' => $periodo?->presencasProfessores->firstWhere('professor_id', $professor->id)?->status,
+                        'temErroDeParticipantes' => $temErroDeParticipantes,
                         'tipo' => 'professor',
                     ])
                 @endforeach
@@ -81,5 +85,23 @@
                 <button class="botao" type="submit">Adicionar participante</button>
             </form>
         </noscript>
+
+        @if (session('sucesso'))
+            <dialog class="admin-dialogo" data-dialogo-retorno aria-labelledby="titulo-confirmacao-presenca">
+                <h2 id="titulo-confirmacao-presenca">Presença confirmada</h2>
+                <p class="admin-dialogo__mensagem">{{ session('sucesso') }}</p>
+                <a class="botao" href="{{ route('admin.presencas.index', ['data' => $data, 'turno' => $turno]) }}">OK</a>
+            </dialog>
+            <noscript><p class="admin-estado-vazio">{{ session('sucesso') }} <a href="{{ route('admin.presencas.index', ['data' => $data, 'turno' => $turno]) }}">Voltar às atividades</a></p></noscript>
+        @endif
+
+        @if ($temErroDeParticipantes || $errors->has('data') || $errors->has('turno'))
+            <dialog class="admin-dialogo" data-dialogo-retorno aria-labelledby="titulo-erro-confirmacao">
+                <h2 id="titulo-erro-confirmacao">Não foi possível confirmar</h2>
+                <p class="admin-dialogo__mensagem">{{ $errors->first('participantes') ?? $errors->first('data') ?? $errors->first('turno') }}</p>
+                <button class="botao" data-fechar-dialogo type="button">OK</button>
+            </dialog>
+            <noscript><p class="admin-erro-formulario">{{ $errors->first('participantes') ?? $errors->first('data') ?? $errors->first('turno') }}</p></noscript>
+        @endif
     </section>
 @endsection
