@@ -7,7 +7,10 @@
         <a class="admin-voltar" href="{{ route('admin.presencas.index', ['data' => $data, 'turno' => $turno]) }}">← Voltar às atividades</a>
 
         <header class="admin-pagina__cabecalho">
-            <p class="rotulo">{{ $calendario->rotuloDoTurno($turno) }} — {{ \Carbon\CarbonImmutable::parse($data)->format('d/m/Y') }}</p>
+            <p class="admin-periodo">
+                <span>Data: {{ \Carbon\CarbonImmutable::parse($data)->format('d/m/Y') }}</span>
+                <span>Turno: {{ $calendario->rotuloDoTurno($turno) }}</span>
+            </p>
             <h1 id="titulo-presenca">{{ $atividade->nome }}</h1>
             @if ($periodo)
                 <p>Última confirmação por {{ $periodo->confirmadoPor->name }}, em {{ $periodo->confirmado_em->format('d/m/Y \à\s H:i') }}.</p>

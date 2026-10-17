@@ -142,7 +142,7 @@ class PresencaController extends Controller
             return response()->json([
                 'html' => view('admin.presencas.partials.cartao-participante', [
                     'participante' => $participante,
-                    'status' => null,
+                    'status' => 'presente',
                     'tipo' => $tipo,
                 ])->render(),
             ], 201);

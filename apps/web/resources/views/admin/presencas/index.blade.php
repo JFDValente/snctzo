@@ -45,19 +45,19 @@
                     <table class="admin-tabela">
                         <thead>
                             <tr>
+                                <th scope="col">Situação</th>
                                 <th scope="col">Atividade</th>
                                 <th scope="col">Professor responsável</th>
-                                <th scope="col">Situação</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($atividades as $atividade)
                                 <tr data-atividade data-professor-responsavel="{{ $atividade->professorResponsavel?->nome }}">
+                                    <td><strong class="admin-status-presenca">{{ $atividade->periodosDePresenca->isEmpty() ? 'Pendente' : 'Confirmado' }}</strong></td>
                                     <td>
                                         <a href="{{ route('admin.presencas.show', ['atividade' => $atividade, 'data' => $data, 'turno' => $turno]) }}">{{ $atividade->nome }}</a>
                                     </td>
                                     <td>{{ $atividade->professorResponsavel?->nome ?? 'Não informado' }}</td>
-                                    <td>{{ $atividade->periodosDePresenca->isEmpty() ? 'Pendente' : 'Confirmado' }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
