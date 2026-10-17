@@ -39,6 +39,19 @@ O código Laravel fica fora de `public_html`. Portanto, `.env`, `vendor` e `stor
 
 Ao configurar o SMTP, preencher as variáveis `MAIL_*` exclusivamente no `.env` do servidor e mudar `EMAIL_CONFIRMACAO_ATIVA=true`.
 
+## Operadores de presença
+
+Após publicar uma versão que altere operadores, execute no diretório
+`apps/web` do servidor:
+
+```bash
+/opt/alt/php84/usr/bin/php artisan presencas:provisionar-operadores
+```
+
+O comando solicita e confirma, diretamente no terminal, as senhas dos usuários
+`SNCTZO_01` a `SNCTZO_04`. Ele pode ser executado novamente para atualizar os
+operadores sem armazenar senhas em arquivos da aplicação.
+
 ## Restrições operacionais
 
 - Não usar o auto-deploy Git do hPanel: ele pode executar `composer update`.
