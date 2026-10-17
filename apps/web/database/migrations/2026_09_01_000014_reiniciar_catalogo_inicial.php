@@ -7,7 +7,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        $usaControleDeChavesEstrangeirasDoMysql = in_array(DB::getDriverName(), ['mysql', 'mariadb'], true);
+
+        if ($usaControleDeChavesEstrangeirasDoMysql) {
+            DB::statement('SET FOREIGN_KEY_CHECKS = 0');
+        }
 
         try {
             foreach ([
@@ -52,7 +56,9 @@ return new class extends Migration
                 ));
             }
         } finally {
-            DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            if ($usaControleDeChavesEstrangeirasDoMysql) {
+                DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+            }
         }
     }
 

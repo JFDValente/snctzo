@@ -72,6 +72,10 @@ Route::prefix('admin')
                 ->whereNumber('atividade')
                 ->middleware('acesso.modulo:atividades')
                 ->name('atividades.show');
+            Route::delete('atividades/{atividade}', [AdminAtividadeController::class, 'destroy'])
+                ->whereNumber('atividade')
+                ->middleware('acesso.modulo:atividades')
+                ->name('atividades.destroy');
             Route::get('presencas', [AdminPresencaController::class, 'index'])
                 ->middleware('acesso.modulo:presencas')
                 ->name('presencas.index');

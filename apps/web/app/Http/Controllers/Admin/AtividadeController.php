@@ -8,6 +8,7 @@ use App\Models\PeriodoDePresenca;
 use App\Support\Presencas\CalendarioDePresencas;
 use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -34,6 +35,14 @@ class AtividadeController extends Controller
         ]);
 
         return view('admin.atividades.show', compact('atividade'));
+    }
+
+    public function destroy(Atividade $atividade): RedirectResponse
+    {
+        $atividade->delete();
+
+        return to_route('admin.atividades.index')
+            ->with('sucesso', 'Atividade excluída com sucesso.');
     }
 
     public function exportar(): StreamedResponse

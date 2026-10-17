@@ -71,6 +71,26 @@
                     </div>
                 @endif
             </section>
+
+            <section class="admin-cartao admin-cartao--amplo admin-zona-perigo" aria-labelledby="titulo-exclusao">
+                <h2 id="titulo-exclusao">Excluir atividade</h2>
+                <p>Esta ação não remove do sistema os participantes cadastrados.</p>
+                <button class="botao botao--perigo" data-abrir-dialogo-exclusao type="button">Excluir atividade</button>
+            </section>
         </div>
+
+        <dialog class="admin-dialogo" data-dialogo-exclusao aria-labelledby="titulo-confirmacao-exclusao">
+            <div class="admin-dialogo__cabecalho">
+                <h2 id="titulo-confirmacao-exclusao">Excluir atividade?</h2>
+                <button class="botao--texto" data-cancelar-exclusao type="button">Cancelar</button>
+            </div>
+            <p class="admin-dialogo__mensagem">A atividade “{{ $atividade->nome }}” deixará de aparecer nas telas, no controle de presença e nos relatórios. Os dados físicos e os participantes permanecerão no banco.</p>
+            <form class="admin-dialogo__acoes" action="{{ route('admin.atividades.destroy', $atividade) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button class="botao botao--secundario" data-cancelar-exclusao type="button">Cancelar</button>
+                <button class="botao botao--perigo" type="submit">Confirmar exclusão</button>
+            </form>
+        </dialog>
     </section>
 @endsection

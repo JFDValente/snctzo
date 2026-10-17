@@ -10,8 +10,12 @@
             <p>As atividades estão ordenadas alfabeticamente pelo nome.</p>
         </header>
 
+        @if (session('sucesso'))
+            <p class="admin-mensagem admin-mensagem--sucesso" role="status">{{ session('sucesso') }}</p>
+        @endif
+
         <div class="admin-pagina__acoes">
-            <a class="botao" href="{{ route('admin.atividades.exportar') }}">Exportar CSV</a>
+            <a class="botao" href="{{ route('admin.atividades.exportar') }}">Exportar Atividades</a>
             <a class="botao botao--secundario" href="{{ route('admin.atividades.presencas.exportar') }}">Exportar relatório de presença</a>
         </div>
 

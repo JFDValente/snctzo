@@ -69,6 +69,7 @@
 
 .admin-pagina__acoes {
     display: flex;
+    gap: 0.75rem;
     justify-content: flex-end;
     margin-bottom: 1.5rem;
 }
@@ -300,6 +301,13 @@
 .admin-dialogo__cabecalho h2 { margin: 0; font-size: 1.2rem; }
 .admin-dialogo > h2 { margin-top: 0; font-size: 1.2rem; }
 .admin-dialogo__mensagem { margin-bottom: 1.25rem; }
+.admin-dialogo__acoes { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: flex-end; }
+.admin-mensagem { margin: 0 0 1.5rem; padding: 1rem 1.25rem; border-radius: 0.75rem; font-weight: 700; }
+.admin-mensagem--sucesso { color: #0d4b32; background: #e4eee8; border: 1px solid #b9d2c3; }
+.admin-zona-perigo { border-color: #e7b8bd; }
+.admin-zona-perigo h2 { color: #9d1c2a; }
+.botao--perigo { color: #fff; background: #b42332; border-color: #b42332; }
+.botao--perigo:hover { background: #8f1724; border-color: #8f1724; }
 .admin-erro-formulario { grid-column: 1 / -1; margin: 0; color: var(--cor-erro); font-weight: 700; }
 .admin-presencas-lista { display: grid; gap: 0.75rem; }
 .admin-pagina--registro-presenca .admin-pagina__cabecalho h1 { font-size: clamp(1.5rem, 3.25vw, 1.9rem); }
@@ -363,6 +371,7 @@
     .admin-presencas-acoes .botao { width: 100%; }
 
     .admin-dialogo { width: 100%; max-width: none; margin: auto 0 0; border-radius: 0.75rem 0.75rem 0 0; }
+    .admin-dialogo__acoes .botao { flex: 1; text-align: center; }
 
     .admin-formulario--filtros-presenca {
         grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -2,7 +2,7 @@
 
 ## 1. Objetivo e escopo
 
-Este documento define a primeira entrega do gerenciamento autenticado da SNCTZO 2026. O módulo permitirá consultar e exportar as atividades submetidas pelo formulário público, sem alterar ou excluir dados.
+Este documento define a primeira entrega do gerenciamento autenticado da SNCTZO 2026. O módulo permitirá consultar e exportar as atividades submetidas pelo formulário público. A exclusão virtual foi acrescentada em revisão posterior e é detalhada na seção 10.
 
 O módulo será servido no mesmo subdomínio da aplicação:
 
@@ -39,6 +39,7 @@ O escopo desta entrega é intencionalmente somente leitura. Edição, exclusão,
 | `GET` | `/admin/atividades` | `admin.atividades.index` | Lista atividades |
 | `GET` | `/admin/atividades/exportar` | `admin.atividades.exportar` | Baixa todas as atividades em CSV |
 | `GET` | `/admin/atividades/{atividade}` | `admin.atividades.show` | Mostra uma atividade |
+| `DELETE` | `/admin/atividades/{atividade}` | `admin.atividades.destroy` | Exclui virtualmente uma atividade (Revisão 3) |
 
 As quatro últimas rotas ficarão dentro do middleware `auth`. Visitantes que tentarem acessá-las serão redirecionados ao login.
 
@@ -91,7 +92,7 @@ No topo da página, haverá o botão **Exportar CSV**, que inicia o download sem
 - Carregar relações necessárias de forma antecipada para evitar consultas repetidas por linha.
 - Quando não houver inscrições, exibir estado vazio claro, sem tabela vazia.
 
-Não haverá filtros, busca, ordenação pela interface, edição ou exclusão nesta fase.
+Não haverá filtros, busca, ordenação pela interface ou edição nesta fase. A exclusão virtual foi incorporada posteriormente pela Revisão 3.
 
 ### 5.3 Exportação CSV
 
@@ -171,7 +172,7 @@ O plano técnico e o status das fases do gerenciamento ficam em [Plano do gerenc
 ## 9. Fora do escopo desta entrega
 
 - Perfis, papéis e permissões;
-- criação, edição ou exclusão de atividades;
+- criação ou edição de atividades;
 - busca, filtros ou relatórios;
 - gestão de instituições, cursos, professores e alunos;
 - redefinição de senha por e-mail;
@@ -183,3 +184,6 @@ O plano técnico e o status das fases do gerenciamento ficam em [Plano do gerenc
 
 As decisões que ampliam presença, exportações, ordenação e controle de acesso
 ao formulário público estão em [Revisão 2 dos módulos administrativos](./revisao-2-modulos-administrativos.md).
+
+A exclusão virtual de atividades, seus limites e plano técnico estão em
+[Revisão 3 do módulo de atividades](./revisao-3-atividades-admin.md).
