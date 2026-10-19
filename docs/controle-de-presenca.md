@@ -267,5 +267,6 @@ administração do evento ou suporte a edições futuras da SNCTZO.
 As tasks, caminhos previstos, critérios de aceite e verificações estão no
 [Plano de implementação do controle de presença](./planos-de-implementacao/controle-de-presenca.md).
 
-As decisões posteriores estão em [Revisão 1](./revisao-1-controle-de-presenca.md)
-e [Revisão 2](./revisao-2-modulos-administrativos.md).
+As decisões posteriores estão em [Revisão 1](./revisao-1-controle-de-presenca.md),
+[Revisão 2](./revisao-2-modulos-administrativos.md) e
+[Revisão 3](./revisao-3-controle-de-presenca.md).
