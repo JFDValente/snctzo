@@ -2,9 +2,14 @@
 
 namespace App\Actions\Presencas;
 
+use App\Models\Aluno;
 use App\Models\Atividade;
 use App\Models\PeriodoDePresenca;
+use App\Models\PresencaAluno;
+use App\Models\PresencaProfessor;
+use App\Models\Professor;
 use App\Support\Presencas\CalendarioDePresencas;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -28,6 +33,8 @@ class ConfirmarPeriodoDePresenca
         $this->validarParticipantes($atividade, $dados);
 
         return DB::transaction(function () use ($atividade, $dados, $data, $turno): PeriodoDePresenca {
+            $this->validarConflitosDePresenca($atividade, $dados, $data, $turno);
+
             $periodo = PeriodoDePresenca::query()
                 ->where('atividade_id', $atividade->id)
                 ->where('data', $data)
@@ -63,6 +70,47 @@ class ConfirmarPeriodoDePresenca
 
             return $periodo;
         });
+    }
+
+    /** @param array<string, mixed> $dados */
+    private function validarConflitosDePresenca(Atividade $atividade, array $dados, string $data, string $turno): void
+    {
+        $alunos = collect($dados['alunos'] ?? [])->filter(fn ($status) => $status === 'presente')->keys()->map(fn ($id) => (int) $id)->sort()->values();
+        $professores = collect($dados['professores'] ?? [])->filter(fn ($status) => $status === 'presente')->keys()->map(fn ($id) => (int) $id)->sort()->values();
+
+        Aluno::query()->whereKey($alunos)->orderBy('id')->lockForUpdate()->get();
+        Professor::query()->whereKey($professores)->orderBy('id')->lockForUpdate()->get();
+
+        $conflitos = PresencaAluno::query()
+            ->select(['presencas_alunos.aluno_id as participante_id', 'alunos.nome as participante', 'atividades.nome as atividade'])
+            ->join('periodos_de_presenca', 'periodos_de_presenca.id', '=', 'presencas_alunos.periodo_de_presenca_id')
+            ->join('atividades', 'atividades.id', '=', 'periodos_de_presenca.atividade_id')
+            ->join('alunos', 'alunos.id', '=', 'presencas_alunos.aluno_id')
+            ->whereIn('presencas_alunos.aluno_id', $alunos)
+            ->where('presencas_alunos.status', 'presente')->where('periodos_de_presenca.data', $data)->where('periodos_de_presenca.turno', $turno)
+            ->where('atividades.id', '!=', $atividade->id)->whereNull('atividades.deleted_at')
+            ->get()->map(fn ($item) => ['tipo' => 'alunos', ...$item->toArray()])
+            ->concat(PresencaProfessor::query()
+                ->select(['presencas_professores.professor_id as participante_id', 'professores.nome as participante', 'atividades.nome as atividade'])
+                ->join('periodos_de_presenca', 'periodos_de_presenca.id', '=', 'presencas_professores.periodo_de_presenca_id')
+                ->join('atividades', 'atividades.id', '=', 'periodos_de_presenca.atividade_id')
+                ->join('professores', 'professores.id', '=', 'presencas_professores.professor_id')
+                ->whereIn('presencas_professores.professor_id', $professores)
+                ->where('presencas_professores.status', 'presente')->where('periodos_de_presenca.data', $data)->where('periodos_de_presenca.turno', $turno)
+                ->where('atividades.id', '!=', $atividade->id)->whereNull('atividades.deleted_at')
+                ->get()->map(fn ($item) => ['tipo' => 'professores', ...$item->toArray()]));
+
+        if ($conflitos->isEmpty()) {
+            return;
+        }
+
+        $mensagens = $conflitos->map(fn (array $conflito) => sprintf('%s %s já está marcado como presente na atividade “%s” em %s, no turno da %s. Altere uma das duas atividades para ausente e confirme novamente.', $conflito['tipo'] === 'alunos' ? 'Aluno' : 'Professor', $conflito['participante'], $conflito['atividade'], CarbonImmutable::parse($data)->format('d/m/Y'), $turno === 'manha' ? 'manhã' : $turno))->values()->all();
+        $erros = ['participantes' => 'Não foi possível confirmar: um ou mais participantes já estão presentes em outra atividade neste turno.', 'conflitos' => $mensagens];
+        foreach ($conflitos->values() as $indice => $conflito) {
+            $erros["{$conflito['tipo']}.{$conflito['participante_id']}"] = $mensagens[$indice];
+        }
+
+        throw ValidationException::withMessages($erros);
     }
 
     /** @param array<string, mixed> $dados

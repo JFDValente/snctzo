@@ -315,6 +315,8 @@
 .admin-periodo span { color: var(--cor-primaria-escura); font-size: clamp(1.35rem, 4vw, 2.2rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; }
 .admin-status-presenca { font-weight: 700; }
 .admin-presenca-item { display: grid; grid-template-columns: minmax(0, 1fr) minmax(10rem, 12rem); gap: 1rem; align-items: end; padding: 1rem; background: var(--cor-superficie); border: 1px solid var(--cor-borda); border-radius: 0.75rem; box-shadow: var(--sombra-suave); }
+.admin-presenca-item--conflito { border: 2px solid var(--cor-erro); background: #fff5f5; }
+.admin-dialogo__lista { margin: -0.5rem 0 1.25rem; padding-left: 1.25rem; }
 .admin-presenca-item strong, .admin-presenca-item span { display: block; }
 .admin-presenca-item span { margin-top: 0.15rem; color: var(--cor-texto-suave); font-size: 0.85rem; }
 .admin-situacao { display: grid; grid-template-columns: repeat(2, max-content); gap: 0.35rem 0.75rem; margin: 0; padding: 0; border: 0; }

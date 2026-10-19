@@ -95,6 +95,7 @@
             <dialog class="admin-dialogo" data-dialogo-retorno aria-labelledby="titulo-erro-confirmacao">
                 <h2 id="titulo-erro-confirmacao">Não foi possível confirmar</h2>
                 <p class="admin-dialogo__mensagem">{{ $errors->first('participantes') ?? $errors->first('data') ?? $errors->first('turno') }}</p>
+                @if ($errors->has('conflitos'))<ul class="admin-dialogo__lista">@foreach ($errors->get('conflitos') as $conflito)<li>{{ $conflito }}</li>@endforeach</ul>@endif
                 <button class="botao" data-fechar-dialogo type="button">OK</button>
             </dialog>
             <noscript><p class="admin-erro-formulario">{{ $errors->first('participantes') ?? $errors->first('data') ?? $errors->first('turno') }}</p></noscript>
